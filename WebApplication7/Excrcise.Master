@@ -1,0 +1,52 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Excrcise.master.cs" Inherits="WebApplication7.Excrcise" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <style>
+        .NiceBacground
+        {
+          padding: 20px;
+          border-radius: 25px;
+          background-color: rgba(128, 128, 128, 0.74); 
+        }
+        .Centerd
+        {
+            text-align:center;
+            margin:auto;
+        }
+        .ListItemCenterd
+        {
+            Width:100%;
+        }
+        .radioButtonList 
+        { 
+            list-style:none; 
+            margin: 0; 
+            padding: 0;
+
+        }
+    .radioButtonList.horizontal li 
+    { 
+        display: inline;
+
+    }
+
+    .radioButtonList label{
+        display:inline;
+    }
+    </style>
+</head>
+<body style="background:url(Photos/Background.jpg); background-size:cover;background-repeat:no-repeat" id="body" onresize="Resize()">
+    <form id="form1" runat="server">
+        <div>
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+</body>
+</html>
