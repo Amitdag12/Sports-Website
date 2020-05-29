@@ -110,7 +110,8 @@ namespace WebApplication7
         private Dictionary<string, Dictionary<string, int>> muscleGroup_muscle_points = new Dictionary<string, Dictionary<string, int>>();//a dictinary contaning muscle groups muscle inside that muscle group and number of points each muscle gets
         protected void IntalizeMuscleDictionary(int generalPoints)//generalPoints is defind by like workout length and kind of workput
         {
-            string[] names = new string[7] { "Leg", "Back", "Chest", "Bicep" , "Shoulder", "Tricep", "Abs" };
+            generalPoints *= 5;
+            string[] names = new string[7] { "Chest", "Shoulder", "Tricep", "Abs", "Back", "Bicep", "Leg" };
             int i = 0;//used to make bugger muscles more important
             foreach(string name in names)
             {
@@ -159,6 +160,8 @@ namespace WebApplication7
          */
         protected string BuildTable(List<List<string>> excLists,string workoutKind)
         {
+           // PrintLists(excLists);
+            int index=0;
             string[] muscleGruopNames = new string[7] { "Leg", "Back", "Bicep", "Chest", "Shoulder", "Tricep", "Abs" };
             Dictionary<string,string[]> days=new Dictionary<string, string[]>();
             switch(workoutKind)
@@ -174,7 +177,7 @@ namespace WebApplication7
                     days["LEGS"] = new string[] { "Leg" };
                     break;
                 default:
-                    days["FULLBODY"] = new string[] { "Leg", "Back", "Bicep", "Chest", "Shoulder", "Tricep", "Abs" };
+                    days["FULLBODY"] = new string[] { "Chest", "Shoulder", "Tricep", "Abs", "Back", "Bicep", "Leg" };
                     break;
             }
             string table = "<table  border='1' style='width: 40 %; height: 70 %; text - align:center; margin: auto'>";
@@ -185,8 +188,10 @@ namespace WebApplication7
                     day.Key+
                 " </th>" +
             " </tr>";
-                foreach(List<string> list in excLists)
+                while(excLists.Count>0)
                 {
+
+                    List<string> list = excLists[0];
                     string[] muscleGroups = day.Value;
                     if (Array.IndexOf(muscleGroups,list[0])==-1)
                     {//checks if ,uscle is inside currnet day if not contibues  to next day
@@ -206,7 +211,7 @@ namespace WebApplication7
                       " </tr>";
                     }
                     excLists.Remove(list);
-                   
+                    index++;
                 }
             }
             return table;
@@ -253,6 +258,7 @@ namespace WebApplication7
             int numberOfExc=int.Parse(WorkoutsLengthRBL.SelectedValue)*int.Parse(WorkoutKindRBL.SelectedValue);//the calculation is thw workout kind which is 1-3 multiplied by how much time the workout is supposed to be
             IntalizeMuscleDictionary(numberOfExc);
             string exc;
+            numberOfExc = numberOfExc > 5 ? 5 : numberOfExc;
             List<List<string>> excLists = new List<List<string>>();
             
             foreach (string muscleGroup in muscleGruopNames)
@@ -274,12 +280,19 @@ namespace WebApplication7
                             lowestMuscleUsed = muscle.Key;
                             max = muscle.Value;
                         }
+                        Debug.WriteLine(lowestMuscleUsed);
                     }
                     if (lowestMuscleUsed != "")
                     {
-                        exc = PullSecondaryExcs(lowestMuscleUsed, usedExc.ToArray());
+                        exc = PullSecondaryExcs(lowestMuscleUsed, usedExc.ToArray(), muscleGroup);
+                        if(exc=="")
+                        {
+                            break;
+                        }
                         muscleGroupList.Add(exc);
+                        usedExc.Add(exc);
                         SubtractExc(exc);
+                        Debug.WriteLine("EXC: " + exc);
                     }
                     else
                     {
@@ -287,22 +300,40 @@ namespace WebApplication7
                     }
                 }
                 excLists.Add(muscleGroupList);
+                max = 0;
+                lowestMuscleUsed = "";
+            }
+            string workoutKind= "ABC";
+            switch(WorkoutKindRBL.SelectedValue)
+            {
+                case "1":
+                    workoutKind = "FB";
+                    break;
+                case "2":
+                    workoutKind = "AB";
+                    break;
             }
 
+        
+            LblTable.Text=BuildTable(excLists, workoutKind);
 
         }
-        protected string PullSecondaryExcs(string muscle,string[] usedExc)
+        protected string PullSecondaryExcs(string muscle,string[] usedExc,string muscleGroup)
         {
+            Debug.WriteLine("------------------------------------");
             DataSet dataset = new DataSet();
-            
+            PrintArray(usedExc);
+            Debug.WriteLine("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
             List<string> potentialExcList = new List<string>();
             
             string pullExc = "SELECT * FROM MuscleWork WHERE [" + muscle + "] >0";
             string exc;
-            string finalExc="blyat";
+            string finalExc="";
             int max=0;
             string Difficulty = " AND (Difficulty =" + difficultyDDL.SelectedItem.Text + " OR Difficulty =" + (int.Parse(difficultyDDL.SelectedItem.Text) - 1) + ")",
-            street = int.Parse(TypeOfWorkoutRBL.SelectedValue) == 1 ? " AND Street= 1" : "";
+            street = int.Parse(TypeOfWorkoutRBL.SelectedValue) == 1 ? " AND Street= 1" : "",
+            muslceG = " AND [" + muscleGroup + "] =1";//muscle group check
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -313,18 +344,18 @@ namespace WebApplication7
                 foreach (DataRow row in dataset.Tables[0].Rows)
                 {
                     exc = row["name"].ToString();
-                    string checkIfExcGood = "SELECT COUNT(*) FROM Excrcise WHERE name='" + exc+"'"+ Difficulty + street;//+ isIsolate
+                    string checkIfExcGood = "SELECT COUNT(*) FROM Excrcise WHERE name='" + exc+"'"+ Difficulty + street+muslceG;//+ isIsolate
                     sqlCommand = new SqlCommand(checkIfExcGood, connection);
                     if (int.Parse(row[muscle].ToString()) > max && Array.IndexOf(usedExc, exc) == -1&&(int)sqlCommand.ExecuteScalar()==1)
                     {
-
+                        Debug.WriteLine(exc);
                         finalExc=exc;
                         max = int.Parse(row[muscle].ToString());
                     }
 
                 }
             }
-            
+            Debug.WriteLine("------------------------------------");
             return finalExc;
         }
         protected bool IsFinished(Dictionary<string, Dictionary<string, int>> muscleGroup_muscle_points)
@@ -371,6 +402,7 @@ namespace WebApplication7
             link += word;
             return link;
         }
+        //hi
         protected void SubtractExc(string exc)
         {
             string[] names = new string[7] { "Leg", "Back", "Chest", "Bicep", "Shoulder", "Tricep", "Abs" };
@@ -408,6 +440,16 @@ namespace WebApplication7
                 default:
                     return Rnd.Next(4, 9).ToString();
 
+            }
+        }
+        protected void PrintLists(List<List<string>> excLists)
+        {
+            foreach(List<string>list in excLists)
+            {
+                foreach(string str in list)
+                {
+                    Debug.WriteLine(str);
+                }
             }
         }
     }
