@@ -180,7 +180,7 @@ namespace WebApplication7
                     days["FULLBODY"] = new string[] { "Chest", "Shoulder", "Tricep", "Abs", "Back", "Bicep", "Leg" };
                     break;
             }
-            string table = "<table  border='1' style='width: 40 %; height: 70 %; text - align:center; margin: auto'>";
+            string table = "<table  border='1' style='width: 40 %; height: 70 %; text - align:center; margin: auto'class='Centerd NiceBacground'>";
             foreach(KeyValuePair<string, string[]> day in days)
             {
                 table += "<tr>" +
@@ -207,7 +207,7 @@ namespace WebApplication7
                         table +=
                         "   <tr>" +
                         "       <td><a href = '" + (GenerateYT_Link(exc)) + "' >" + exc + "</a></td>" +
-                      "     <td>" + (GenerateRepsCount()) + "</td>" +
+                      "     <td>" + (GenerateRepsCount(exc)) + "</td>" +
                       " </tr>";
                     }
                     excLists.Remove(list);
@@ -255,9 +255,10 @@ namespace WebApplication7
             List<string> usedExc = new List<string>();
             string lowestMuscleUsed = "";
             int max = 1;
-            int numberOfExc=int.Parse(WorkoutsLengthRBL.SelectedValue)*int.Parse(WorkoutKindRBL.SelectedValue);//the calculation is thw workout kind which is 1-3 multiplied by how much time the workout is supposed to be
+            int numberOfExc=int.Parse((Math.Round(double.Parse(WorkoutsLengthRBL.SelectedValue)/ double.Parse(WorkoutKindRBL.SelectedValue))).ToString());//the calculation is thw workout kind which is 1-3 divided by how much time the workout is supposed to be
             IntalizeMuscleDictionary(numberOfExc);
             string exc;
+            
             numberOfExc = numberOfExc > 5 ? 5 : numberOfExc;
             List<List<string>> excLists = new List<List<string>>();
             
@@ -306,7 +307,7 @@ namespace WebApplication7
             string workoutKind= "ABC";
             switch(WorkoutKindRBL.SelectedValue)
             {
-                case "1":
+                case "3":
                     workoutKind = "FB";
                     break;
                 case "2":
@@ -314,7 +315,7 @@ namespace WebApplication7
                     break;
             }
 
-        
+            PrintPoints(muscleGroup_muscle_points);
             LblTable.Text=BuildTable(excLists, workoutKind);
 
         }
@@ -333,7 +334,7 @@ namespace WebApplication7
             string Difficulty = " AND (Difficulty =" + difficultyDDL.SelectedItem.Text + " OR Difficulty =" + (int.Parse(difficultyDDL.SelectedItem.Text) - 1) + ")",
             street = int.Parse(TypeOfWorkoutRBL.SelectedValue) == 1 ? " AND Street= 1" : "",
             muslceG = " AND [" + muscleGroup + "] =1";//muscle group check
-
+            string isCompound = TypeOfWorkoutRBL.SelectedValue == "MG" ? "" : " AND IsCompound=1 ";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -344,7 +345,7 @@ namespace WebApplication7
                 foreach (DataRow row in dataset.Tables[0].Rows)
                 {
                     exc = row["name"].ToString();
-                    string checkIfExcGood = "SELECT COUNT(*) FROM Excrcise WHERE name='" + exc+"'"+ Difficulty + street+muslceG;//+ isIsolate
+                    string checkIfExcGood = "SELECT COUNT(*) FROM Excrcise WHERE name='" + exc+"'"+ Difficulty + street+muslceG+isCompound;//+ isIsolate
                     sqlCommand = new SqlCommand(checkIfExcGood, connection);
                     if (int.Parse(row[muscle].ToString()) > max && Array.IndexOf(usedExc, exc) == -1&&(int)sqlCommand.ExecuteScalar()==1)
                     {
@@ -358,19 +359,15 @@ namespace WebApplication7
             Debug.WriteLine("------------------------------------");
             return finalExc;
         }
-        protected bool IsFinished(Dictionary<string, Dictionary<string, int>> muscleGroup_muscle_points)
+        protected void PrintPoints(Dictionary<string, Dictionary<string, int>> muscleGroup_muscle_points)
         {
             foreach (KeyValuePair<string, Dictionary<string, int>> muscleGroup in muscleGroup_muscle_points)
             {
                 foreach (KeyValuePair<string, int> muscle in muscleGroup.Value)
                 {
-                    if (muscle.Value > 1)
-                    {
-                        return false;
-                    }
+                    Debug.WriteLine(muscle.Key+": "+muscle.Value);
                 }
             }
-            return true;
         }
         protected string GenerateYT_Link(string excName)
         {
@@ -431,16 +428,50 @@ namespace WebApplication7
                 }
             }
         }
-            protected string GenerateRepsCount()
+       protected string GenerateRepsCount(string exc)
         {
+            string RepAndSetCount;
             switch (WorkoutsFoucusRBL.SelectedValue)
             {
                 case "MG":
-                    return Rnd.Next(8, 16).ToString();
+                    {
+                        if (IsExcCompound(exc))
+                        {
+                            RepAndSetCount = Rnd.Next(1, 3) == 2 ? "8" : "10";
+                            RepAndSetCount += " Reps for ";
+                            RepAndSetCount += Rnd.Next(1, 3) == 2 ? "4" : "5";
+                            RepAndSetCount += " Sets";
+                        }
+                        else
+                        {
+                            RepAndSetCount = Rnd.Next(1, 3) == 2 ? "12" : "14";
+                            RepAndSetCount += " Reps for ";
+                            RepAndSetCount += Rnd.Next(1, 3) == 2 ? "3" : "4";
+                            RepAndSetCount += " Sets";
+                        }
+                        break;
+                    }
                 default:
-                    return Rnd.Next(4, 9).ToString();
+                    {
+                        if (IsExcCompound(exc))
+                        {
+                            RepAndSetCount = Rnd.Next(1, 3) == 2 ? "3" : "5";
+                            RepAndSetCount += " Reps for ";
+                            RepAndSetCount += Rnd.Next(1, 3) == 2 ? "3" : "4";
+                            RepAndSetCount += " Sets";
+                        }
+                        else
+                        {
+                            RepAndSetCount = Rnd.Next(1, 3) == 2 ? "8" : "10";
+                            RepAndSetCount += " Reps for ";
+                            RepAndSetCount += Rnd.Next(1, 3) == 2 ? "3" : "4";
+                            RepAndSetCount += " Sets";
+                        }
+                        break;
+                    }
 
             }
+            return RepAndSetCount;
         }
         protected void PrintLists(List<List<string>> excLists)
         {

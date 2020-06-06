@@ -20,6 +20,7 @@
             visibility: visible;
         }
     </style>
+    
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div id="RegesterDIv" class="Centerd NiceBacground" style="width:50%;">
@@ -63,9 +64,9 @@
         <br />
         <h3>What Kind of split you would like?</h3>
         <asp:RadioButtonList ID="WorkoutKindRBL" runat="server" CssClass="radioButtonList ListItemCenterd" RepeatDirection="Horizontal">
-            <asp:ListItem Value="1" selected="True">full body</asp:ListItem>
+            <asp:ListItem Value="3" selected="True">full body</asp:ListItem>
             <asp:ListItem Value="2" >ab</asp:ListItem>
-            <asp:ListItem Value="3" >abc</asp:ListItem>
+            <asp:ListItem Value="1" >abc</asp:ListItem>
         </asp:RadioButtonList>  
         <br />
         <img src="https://img.icons8.com/android/24/000000/info.png" id="KindHelpImg" class="KindHelpImg"/>
