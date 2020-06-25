@@ -67,24 +67,6 @@ namespace WebApplication7 {
         protected global::System.Web.UI.WebControls.RadioButtonList Lats;
         
         /// <summary>
-        /// Gluts control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList Gluts;
-        
-        /// <summary>
-        /// Hamstring control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList Hamstring;
-        
-        /// <summary>
         /// Chest control.
         /// </summary>
         /// <remarks>
@@ -103,33 +85,6 @@ namespace WebApplication7 {
         protected global::System.Web.UI.WebControls.RadioButtonList Biceps;
         
         /// <summary>
-        /// Abdominal control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList Abdominal;
-        
-        /// <summary>
-        /// Obliques control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList Obliques;
-        
-        /// <summary>
-        /// Quads control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList Quads;
-        
-        /// <summary>
         /// Abs control.
         /// </summary>
         /// <remarks>
@@ -139,13 +94,13 @@ namespace WebApplication7 {
         protected global::System.Web.UI.WebControls.RadioButtonList Abs;
         
         /// <summary>
-        /// Calves control.
+        /// Legs control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList Calves;
+        protected global::System.Web.UI.WebControls.RadioButtonList Legs;
         
         /// <summary>
         /// PowerLifting control.

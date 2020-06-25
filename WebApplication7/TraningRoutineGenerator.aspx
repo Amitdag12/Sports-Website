@@ -19,16 +19,45 @@
         img.KindHelpImg:hover + .KindHelpTxt {
             visibility: visible;
         }
+        .auto-style4 {
+            width: 114px;
+            height: 230px;
+        }
+        .MuscleLight :hover
+        {
+            background-color:lawngreen;
+        }
+        .MuscleGroups
+        {
+
+        }
+        .auto-style5 {
+            width: 46px;
+            height: 276px;
+        }
+        .auto-style6 {
+            width: 125px;
+            height: 306px;
+        }
+        .auto-style7 {
+            width: 53px;
+            height: 271px;
+        }
+        .auto-style8 {
+            width: 80px;
+            height: 109px;
+        }
     </style>
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+
     <div id="RegesterDIv" class="Centerd NiceBacground" style="width:50%;">
         <h3>How much time the workout should be?</h3>
         <asp:RadioButtonList ID="WorkoutsLengthRBL" runat="server" CssClass="radioButtonList ListItemCenterd" RepeatDirection="Horizontal">
             <asp:ListItem Value="1">45 min</asp:ListItem>
             <asp:ListItem Value="2" selected="True" >60-90 min</asp:ListItem>
-            <asp:ListItem Value="3" >90+ min</asp:ListItem>
+            <asp:ListItem Value="5" >90+ min</asp:ListItem>
         </asp:RadioButtonList>
         <br />
         <br />

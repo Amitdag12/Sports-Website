@@ -76,11 +76,13 @@
     <Content Include="HtmlPage1.html" />
     <Content Include="Human Schem\Back.png" />
     <Content Include="Human Schem\BackHand.png" />
+    <Content Include="Human Schem\BackHandLeft.png" />
     <Content Include="Human Schem\BackHead.png" />
     <Content Include="Human Schem\BackLegs.png" />
     <Content Include="Human Schem\Chest.png" />
     <Content Include="Human Schem\Core.png" />
     <Content Include="Human Schem\FrontHand.png" />
+    <Content Include="Human Schem\FrontHandLeft.png" />
     <Content Include="Human Schem\FrontHead.png" />
     <Content Include="Human Schem\FrontLegs.png" />
     <Content Include="Photos\Background.jpg" />

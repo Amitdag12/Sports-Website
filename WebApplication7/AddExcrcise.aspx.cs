@@ -39,16 +39,11 @@ namespace WebApplication7
                 int.Parse(Shoulder.SelectedValue) + "," + 
                 int.Parse(Triceps.SelectedValue) + ","
                 + int.Parse(Lats.SelectedValue) + "," 
-                + int.Parse(Gluts.SelectedValue) + "," 
-                + int.Parse(Hamstring.SelectedValue) + "," 
                 + int.Parse(Chest.SelectedValue) + "," 
                 + int.Parse(Biceps.SelectedValue) + "," 
-                + int.Parse(Abdominal.SelectedValue) + ","
-                + int.Parse(Obliques.SelectedValue) + ","
-                + int.Parse(Quads.SelectedValue) + ","
-                + int.Parse(Calves.SelectedValue) + ","
+                + int.Parse(Abs.SelectedValue) + ","
+                + int.Parse(Legs.SelectedValue) + ","
                 + int.Parse(Difficult.Text) + ","
-                + int.Parse(PowerLifting.SelectedValue) + ","
                 + int.Parse(Street.SelectedValue) + ")";
             //LblExcrciseName.Text = cmdInsertString1;
             try
@@ -60,7 +55,9 @@ namespace WebApplication7
                     sqlCommand.ExecuteNonQuery();
                 }
                 Response.Redirect("AddExcrcise.aspx");
-            }catch(Exception ex) { }
+            }catch(Exception ex) {
+                Response.Write("<script>alert('"+ex.Message+"')</script>");
+            }
              
         }
     }

@@ -27,18 +27,8 @@
                 <asp:ListItem Value="1">true</asp:ListItem>
                 <asp:ListItem Value="0" Selected="True">fale</asp:ListItem>
                 </asp:RadioButtonList>
-            <h3>Lats</h3>
+            <h3>Back</h3>
                 <asp:RadioButtonList ID="Lats" CssClass="radioButtonList ListItemCenterd" runat="server" RepeatDirection="Horizontal" >
-                <asp:ListItem Value="1">true</asp:ListItem>
-                <asp:ListItem Value="0" Selected="True">fale</asp:ListItem>
-                </asp:RadioButtonList>
-            <h3>Gluts</h3>
-                <asp:RadioButtonList ID="Gluts" CssClass="radioButtonList ListItemCenterd" runat="server" RepeatDirection="Horizontal" >
-                <asp:ListItem Value="1">true</asp:ListItem>
-                <asp:ListItem Value="0" Selected="True">fale</asp:ListItem>
-                </asp:RadioButtonList>
-            <h3>Hamstring</h3>
-                <asp:RadioButtonList ID="Hamstring" CssClass="radioButtonList ListItemCenterd" runat="server" RepeatDirection="Horizontal" >
                 <asp:ListItem Value="1">true</asp:ListItem>
                 <asp:ListItem Value="0" Selected="True">fale</asp:ListItem>
                 </asp:RadioButtonList>
@@ -52,28 +42,13 @@
                 <asp:ListItem Value="1">true</asp:ListItem>
                 <asp:ListItem Value="0" Selected="True">fale</asp:ListItem>
                 </asp:RadioButtonList>
-            <h3>Abdominal</h3>
-                <asp:RadioButtonList ID="Abdominal" CssClass="radioButtonList ListItemCenterd" runat="server" RepeatDirection="Horizontal" >
-                <asp:ListItem Value="1">true</asp:ListItem>
-                <asp:ListItem Value="0" Selected="True">fale</asp:ListItem>
-                </asp:RadioButtonList>
-            <h3>Obliques</h3>
-                <asp:RadioButtonList ID="Obliques" CssClass="radioButtonList ListItemCenterd" runat="server" RepeatDirection="Horizontal" >
-                <asp:ListItem Value="1">true</asp:ListItem>
-                <asp:ListItem Value="0" Selected="True">fale</asp:ListItem>
-                </asp:RadioButtonList>
-            <h3>Quads</h3>
-                <asp:RadioButtonList ID="Quads" CssClass="radioButtonList ListItemCenterd" runat="server" RepeatDirection="Horizontal" >
-                <asp:ListItem Value="1">true</asp:ListItem>
-                <asp:ListItem Value="0" Selected="True">fale</asp:ListItem>
-                </asp:RadioButtonList>
             <h3>Abs</h3>
                 <asp:RadioButtonList ID="Abs" CssClass="radioButtonList ListItemCenterd" runat="server" RepeatDirection="Horizontal" >
                 <asp:ListItem Value="1">true</asp:ListItem>
                 <asp:ListItem Value="0" Selected="True">fale</asp:ListItem>
                 </asp:RadioButtonList>
-            <h3>Calves</h3>
-                <asp:RadioButtonList ID="Calves" CssClass="radioButtonList ListItemCenterd" runat="server" RepeatDirection="Horizontal" >
+            <h3>Legs</h3>
+                <asp:RadioButtonList ID="Legs" CssClass="radioButtonList ListItemCenterd" runat="server" RepeatDirection="Horizontal" >
                 <asp:ListItem Value="1">true</asp:ListItem>
                 <asp:ListItem Value="0" Selected="True">fale</asp:ListItem>
                 </asp:RadioButtonList>

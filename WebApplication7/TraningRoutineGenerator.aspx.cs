@@ -13,12 +13,13 @@ namespace WebApplication7
 {
 
     public partial class TraningRoutineGenerator : System.Web.UI.Page
-    {   
+    {
+        
         private string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='|DataDirectory|\Excrcises.mdf';Integrated Security=True";
-        private Random Rnd=new Random();
+        private Random Rnd = new Random();
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+
             if (!IsPostBack)
             {
                 for (int i = 1; i < 7; i++)
@@ -38,7 +39,7 @@ namespace WebApplication7
             {
                 Debug.WriteLine(arr[i]);
             }
-            
+
         }
         /*
          * Exchange Butoon?
@@ -111,19 +112,23 @@ namespace WebApplication7
         protected void IntalizeMuscleDictionary(int generalPoints)//generalPoints is defind by like workout length and kind of workput
         {
             generalPoints *= 5;
-            string[] names = new string[7] { "Chest", "Shoulder", "Tricep", "Abs", "Back", "Bicep", "Leg" };
-            int i = 0;//used to make bugger muscles more important
-            foreach(string name in names)
+            string[] muscleGroupNames = new string[7] { "Chest", "Shoulder", "Tricep", "Abs", "Back", "Bicep", "Leg" };
+            string[] majorMuscles = new string[] { "Chest", "Back", "Leg" };//used to make bigger muscles more important
+            foreach (string muscleGroupName in muscleGroupNames)
             {
-                i++;
-                List<string> muscles = GetMusclesGroupMuscles(name);
-                muscleGroup_muscle_points[name] = new Dictionary<string, int>();
+                List<string> muscles = GetMusclesGroupMuscles(muscleGroupName);
+                muscleGroup_muscle_points[muscleGroupName] = new Dictionary<string, int>();
                 foreach (string muscle in muscles)
                 {
-                    muscleGroup_muscle_points[name][muscle]= i > 3 ? generalPoints : generalPoints + 5;
+                    muscleGroup_muscle_points[muscleGroupName][muscle] = Array.IndexOf(majorMuscles, muscleGroupName) == -1 ? generalPoints : generalPoints + 5;//bigger nuscles get 5 more points than smaller muscles
+                    if (WorkoutKindRBL.SelectedItem.Text == "abc"&& muscleGroupName=="Leg")
+                    {
+                        muscleGroup_muscle_points[muscleGroupName][muscle] *= 2;
+                    }
                 }
-                
+
             }
+            muscleGroup_muscle_points["Leg"]["Leg Calves"] = 5;
 
         }
         protected List<string> GetMusclesGroupMuscles(string muscleGroup)
@@ -134,7 +139,7 @@ namespace WebApplication7
             List<string> muscleGroupMuscles = new List<string>();
             foreach (string x in names)
             {
-                if(FirstWord(x)==muscleGroup)
+                if (FirstWord(x) == muscleGroup)
                 {
                     muscleGroupMuscles.Add(x);
                 }
@@ -143,8 +148,8 @@ namespace WebApplication7
         }
         protected string FirstWord(string x)
         {
-            string word="";
-            foreach(char c in x)
+            string word = "";
+            foreach (char c in x)
             {
                 if (c == ' ')
                     return word;
@@ -158,22 +163,22 @@ namespace WebApplication7
          * 
          * 
          */
-        protected string BuildTable(List<List<string>> excLists,string workoutKind)
+        protected string BuildTable(List<List<string>> excLists, string workoutKind)
         {
-           // PrintLists(excLists);
-            int index=0;
+            // PrintLists(excLists);
+            int index = 0;
             string[] muscleGruopNames = new string[7] { "Leg", "Back", "Bicep", "Chest", "Shoulder", "Tricep", "Abs" };
-            Dictionary<string,string[]> days=new Dictionary<string, string[]>();
-            switch(workoutKind)
+            Dictionary<string, string[]> days = new Dictionary<string, string[]>();
+            switch (workoutKind)
             {
-                
+
                 case "AB":
                     days["PUSH"] = new string[] { "Chest", "Shoulder", "Tricep", "Abs" };
                     days["PULL"] = new string[] { "Leg", "Back", "Bicep" };
                     break;
                 case "ABC":
                     days["PUSH"] = new string[] { "Chest", "Shoulder", "Tricep" };
-                    days["PULL"] = new string[] {  "Back", "Bicep" , "Abs" };
+                    days["PULL"] = new string[] { "Back", "Bicep", "Abs" };
                     days["LEGS"] = new string[] { "Leg" };
                     break;
                 default:
@@ -181,19 +186,19 @@ namespace WebApplication7
                     break;
             }
             string table = "<table  border='1' style='width: 40 %; height: 70 %; text - align:center; margin: auto'class='Centerd NiceBacground'>";
-            foreach(KeyValuePair<string, string[]> day in days)
+            foreach (KeyValuePair<string, string[]> day in days)
             {
                 table += "<tr>" +
             "  <th colspan = '2' class='headline'>" +
-                    day.Key+
+                    day.Key +
                 " </th>" +
             " </tr>";
-                while(excLists.Count>0)
+                while (excLists.Count > 0)
                 {
 
                     List<string> list = excLists[0];
                     string[] muscleGroups = day.Value;
-                    if (Array.IndexOf(muscleGroups,list[0])==-1)
+                    if (Array.IndexOf(muscleGroups, list[0]) == -1)
                     {//checks if ,uscle is inside currnet day if not contibues  to next day
                         break;
                     }
@@ -202,7 +207,7 @@ namespace WebApplication7
                         "<th colspan = '2' class='headline'>" + list[0] + "</th>" +
                   " </tr> ";
                     list.Remove(list[0]);
-                    foreach(string exc in list)
+                    foreach (string exc in list)
                     {
                         table +=
                         "   <tr>" +
@@ -233,7 +238,7 @@ namespace WebApplication7
                 SqlCommand sqlCommand = new SqlCommand(commandUserString, connection);
                 SqlDataAdapter adapter = new SqlDataAdapter(sqlCommand);
                 adapter.Fill(dataset);
-            }            
+            }
             foreach (DataRow row in dataset.Tables[0].Rows)
             {
                 excList.Add(row["name"].ToString());
@@ -247,7 +252,20 @@ namespace WebApplication7
         /*
          * the idea behind this is to create a workout which centers around one big exc for each muscle group and then filling 
          * the rest of the excrcises for that muscle group with smaller excrcises which work on the muscles that are most not used
-         */ 
+         */
+        protected bool IsNotWorkingAll(string muscleGroup, Dictionary<string, Dictionary<string, int>> muscleGroup_muscle_points)
+        {
+            Dictionary<string, int> theMuscleGroup = muscleGroup_muscle_points[muscleGroup];
+            foreach (KeyValuePair<string, int> muscle in theMuscleGroup)
+            {
+                if (muscle.Value > 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
         protected void CreateWotkout(object sender, EventArgs e)
         {
 
@@ -255,22 +273,24 @@ namespace WebApplication7
             List<string> usedExc = new List<string>();
             string lowestMuscleUsed = "";
             int max = 1;
-            int numberOfExc=int.Parse((Math.Round(double.Parse(WorkoutsLengthRBL.SelectedValue)/ double.Parse(WorkoutKindRBL.SelectedValue))).ToString());//the calculation is thw workout kind which is 1-3 divided by how much time the workout is supposed to be
+            int numberOfExc = int.Parse(Math.Round(double.Parse(WorkoutsLengthRBL.SelectedValue) / double.Parse(WorkoutKindRBL.SelectedValue)).ToString());//the calculation is thw workout kind which is 1-3 divided by how much time the workout is supposed to be
             IntalizeMuscleDictionary(numberOfExc);
             string exc;
-            
+            Debug.WriteLine("---------------------" + numberOfExc);
             numberOfExc = numberOfExc > 5 ? 5 : numberOfExc;
             List<List<string>> excLists = new List<List<string>>();
-            
+
             foreach (string muscleGroup in muscleGruopNames)
             {
                 List<string> muscleGroupList = new List<string>();
                 muscleGroupList.Add(muscleGroup);
                 exc = PullMainExc(muscleGroup, true, usedExc.ToArray(), int.Parse(TypeOfWorkoutRBL.SelectedValue));
-                SubtractExc(exc);
+                muscleGroup_muscle_points = SubtractAndAddExc(exc, muscleGroup_muscle_points, "-");
                 muscleGroupList.Add(exc);
                 usedExc.Add(exc);
-                for (int i = 0; i < numberOfExc; i++)
+                // for (; i < numberOfExc; i++)
+                int i = 0;
+                while (IsNotWorkingAll(muscleGroup, muscleGroup_muscle_points)&&i<numberOfExc)
                 {
 
 
@@ -281,31 +301,33 @@ namespace WebApplication7
                             lowestMuscleUsed = muscle.Key;
                             max = muscle.Value;
                         }
-                        Debug.WriteLine(lowestMuscleUsed);
+                        // Debug.WriteLine(lowestMuscleUsed);
                     }
                     if (lowestMuscleUsed != "")
                     {
                         exc = PullSecondaryExcs(lowestMuscleUsed, usedExc.ToArray(), muscleGroup);
-                        if(exc=="")
+                        if (exc == "")
                         {
+                            Debug.WriteLine("EXC: " + exc);
                             break;
                         }
                         muscleGroupList.Add(exc);
                         usedExc.Add(exc);
-                        SubtractExc(exc);
-                        Debug.WriteLine("EXC: " + exc);
+                        muscleGroup_muscle_points = SubtractAndAddExc(exc, muscleGroup_muscle_points,"-");
+                        //Debug.WriteLine("EXC: " + exc);
                     }
                     else
                     {
                         break;
                     }
+                    i++;
                 }
                 excLists.Add(muscleGroupList);
                 max = 0;
                 lowestMuscleUsed = "";
             }
-            string workoutKind= "ABC";
-            switch(WorkoutKindRBL.SelectedValue)
+            string workoutKind = "ABC";
+            switch (WorkoutKindRBL.SelectedValue)
             {
                 case "3":
                     workoutKind = "FB";
@@ -315,22 +337,70 @@ namespace WebApplication7
                     break;
             }
 
+            excLists =CheckIfAnyExcsRedundant(excLists, new Dictionary<string, Dictionary<string, int>>(muscleGroup_muscle_points));
+            Debug.WriteLine("---------EXC LIST------------------");
             PrintPoints(muscleGroup_muscle_points);
-            LblTable.Text=BuildTable(excLists, workoutKind);
+            LblTable.Text = BuildTable(excLists, workoutKind);
 
         }
-        protected string PullSecondaryExcs(string muscle,string[] usedExc,string muscleGroup)
+        protected List<List<string>> CheckIfAnyExcsRedundant(List<List<string>> excLists, Dictionary<string, Dictionary<string, int>> Local_muscleGroup_muscle_points)
         {
-            Debug.WriteLine("------------------------------------");
+            foreach (List<string> excList in excLists)
+            {
+                for (int i = 1; i < excList.Count; i++)
+                {
+                    
+                    string exc = excList[i];
+                    if (!IsExcNecessary(exc))//check if after removing the exc still working all muscls
+                    {
+                        SubtractAndAddExc(exc, muscleGroup_muscle_points, "+");
+                        excList.Remove(exc);
+                        Debug.WriteLine("REMOVED: "+exc);
+                    }
+                }
+            }
+            return excLists;
+        }
+        protected bool IsExcNecessary(string exc)
+        {
+            bool isNecessary = false;
+            DataSet dataSet = new DataSet();
+            string getExc = "SELECT * FROM MuscleWork WHERE name='" + exc + "'";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlCommand sqlCommand = new SqlCommand(getExc, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(sqlCommand);
+                adapter.Fill(dataSet);
+                string getMusclePoint;
+                foreach (DataColumn column in dataSet.Tables[0].Columns)
+                {
+                    if (column.ToString() == "name")
+                    {
+                        continue;
+                    }
+                    getMusclePoint = "SELECT [" + column.ToString() + "] FROM MuscleWork WHERE name='" + exc + "'";
+                    sqlCommand = new SqlCommand(getMusclePoint, connection);
+                    int musclePoint = (int)sqlCommand.ExecuteScalar();
+                    if (muscleGroup_muscle_points[FirstWord(column.ToString())][column.ToString()]+ musclePoint >0)//gets each colmun muslce group because first word and then by colmun and either adds or subtracts
+                    {
+                        isNecessary = true;
+                    }
+                }
+            }
+            return isNecessary;
+        }
+    
+        protected string PullSecondaryExcs(string muscle, string[] usedExc, string muscleGroup)
+        {
             DataSet dataset = new DataSet();
-            PrintArray(usedExc);
-            Debug.WriteLine("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
             List<string> potentialExcList = new List<string>();
-            
+
             string pullExc = "SELECT * FROM MuscleWork WHERE [" + muscle + "] >0";
+            
             string exc;
-            string finalExc="";
-            int max=0;
+            string finalExc = "";
+            int max = 0;
             string Difficulty = " AND (Difficulty =" + difficultyDDL.SelectedItem.Text + " OR Difficulty =" + (int.Parse(difficultyDDL.SelectedItem.Text) - 1) + ")",
             street = int.Parse(TypeOfWorkoutRBL.SelectedValue) == 1 ? " AND Street= 1" : "",
             muslceG = " AND [" + muscleGroup + "] =1";//muscle group check
@@ -341,22 +411,26 @@ namespace WebApplication7
                 SqlCommand sqlCommand = new SqlCommand(pullExc, connection);
                 SqlDataAdapter adapter = new SqlDataAdapter(sqlCommand);
                 adapter.Fill(dataset);
-                           
+
                 foreach (DataRow row in dataset.Tables[0].Rows)
                 {
+                   
                     exc = row["name"].ToString();
-                    string checkIfExcGood = "SELECT COUNT(*) FROM Excrcise WHERE name='" + exc+"'"+ Difficulty + street+muslceG+isCompound;//+ isIsolate
+                    string checkIfExcGood = "SELECT COUNT(*) FROM Excrcise WHERE name='" + exc + "'" + Difficulty + street + muslceG;// +isCompound;//+ isIsolate
                     sqlCommand = new SqlCommand(checkIfExcGood, connection);
-                    if (int.Parse(row[muscle].ToString()) > max && Array.IndexOf(usedExc, exc) == -1&&(int)sqlCommand.ExecuteScalar()==1)
+                    if (int.Parse(row[muscle].ToString()) > max && Array.IndexOf(usedExc, exc) == -1 && (int)sqlCommand.ExecuteScalar() == 1)
                     {
-                        Debug.WriteLine(exc);
-                        finalExc=exc;
+                        finalExc = exc;
                         max = int.Parse(row[muscle].ToString());
                     }
 
                 }
             }
-            Debug.WriteLine("------------------------------------");
+            if (finalExc == "")
+            {
+                Debug.WriteLine("EXC: " + pullExc);
+                //  Debug.WriteLine("SELECT COUNT(*) FROM Excrcise WHERE name='" + finalExc + "'" + Difficulty + street + muslceG + isCompound);
+            }
             return finalExc;
         }
         protected void PrintPoints(Dictionary<string, Dictionary<string, int>> muscleGroup_muscle_points)
@@ -365,7 +439,7 @@ namespace WebApplication7
             {
                 foreach (KeyValuePair<string, int> muscle in muscleGroup.Value)
                 {
-                    Debug.WriteLine(muscle.Key+": "+muscle.Value);
+                    Debug.WriteLine(muscle.Key + ": " + muscle.Value);
                 }
             }
         }
@@ -400,7 +474,7 @@ namespace WebApplication7
             return link;
         }
         //hi
-        protected void SubtractExc(string exc)
+        protected Dictionary<string, Dictionary<string, int>> SubtractAndAddExc(string exc, Dictionary<string, Dictionary<string, int>> Local_muscleGroup_muscle_points,string mathSymbol)//mathSymbol can either be "+" or "-"
         {
             string[] names = new string[7] { "Leg", "Back", "Chest", "Bicep", "Shoulder", "Tricep", "Abs" };
             DataSet dataSet = new DataSet();
@@ -414,21 +488,31 @@ namespace WebApplication7
                 string getMusclePoint;
                 foreach (DataColumn column in dataSet.Tables[0].Columns)
                 {
-                    if(column.ToString()=="name")
+                    if (column.ToString() == "name")
                     {
                         continue;
                     }
-                    getMusclePoint="SELECT ["+column.ToString()+"] FROM MuscleWork WHERE name='" + exc + "'";
+                    getMusclePoint = "SELECT [" + column.ToString() + "] FROM MuscleWork WHERE name='" + exc + "'";
                     sqlCommand = new SqlCommand(getMusclePoint, connection);
                     // Debug.WriteLine("-------------------------------");
                     // Debug.WriteLine("A: "+ column.ToString());
                     //   Debug.WriteLine("B: " + FirstWord(column.ToString()));
-                    Debug.WriteLine(getMusclePoint);
-                    muscleGroup_muscle_points[FirstWord(column.ToString())][column.ToString()] -= (int)sqlCommand.ExecuteScalar();//gets each colmun muslce group because first word and then by colmun
+                    // Debug.WriteLine(getMusclePoint);
+                    int musclePoint = (int)sqlCommand.ExecuteScalar();
+                    if (mathSymbol.Equals("-"))//gets each colmun muslce group because first word and then by colmun and either adds or subtracts
+                    {
+                        Local_muscleGroup_muscle_points[FirstWord(column.ToString())][column.ToString()] -= musclePoint;
+                    }
+                    else
+                    {
+                        Local_muscleGroup_muscle_points[FirstWord(column.ToString())][column.ToString()] += musclePoint;
+                    }
                 }
             }
+            return Local_muscleGroup_muscle_points;
         }
-       protected string GenerateRepsCount(string exc)
+        
+        protected string GenerateRepsCount(string exc)
         {
             string RepAndSetCount;
             switch (WorkoutsFoucusRBL.SelectedValue)
@@ -439,7 +523,7 @@ namespace WebApplication7
                         {
                             RepAndSetCount = Rnd.Next(1, 3) == 2 ? "8" : "10";
                             RepAndSetCount += " Reps for ";
-                            RepAndSetCount += Rnd.Next(1, 3) == 2 ? "4" : "5";
+                            RepAndSetCount += Rnd.Next(1, 3) == 2 ? "3" : "4";
                             RepAndSetCount += " Sets";
                         }
                         else
@@ -475,9 +559,9 @@ namespace WebApplication7
         }
         protected void PrintLists(List<List<string>> excLists)
         {
-            foreach(List<string>list in excLists)
+            foreach (List<string> list in excLists)
             {
-                foreach(string str in list)
+                foreach (string str in list)
                 {
                     Debug.WriteLine(str);
                 }
