@@ -14,7 +14,7 @@ namespace WebApplication7
 
     public partial class TraningRoutineGenerator : System.Web.UI.Page
     {
-        
+        private int restTimeIsolate;
         private string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='|DataDirectory|\Excrcises.mdf';Integrated Security=True";
         private Random Rnd = new Random();
         protected void Page_Load(object sender, EventArgs e)
@@ -163,7 +163,7 @@ namespace WebApplication7
          * 
          * 
          */
-        protected string BuildTable(List<List<string>> excLists, string workoutKind)
+        protected string BuildTable(List<List<string>> excLists, string workoutKind,Dictionary<string,string> repAndSetCount, Dictionary<string, string> restTime)
         {
             // PrintLists(excLists);
             int index = 0;
@@ -192,6 +192,7 @@ namespace WebApplication7
             "  <th colspan = '2' class='headline'>" +
                     day.Key +
                 " </th>" +
+                "  <th colspan = '2' class='headline'>Rest time</ th > "+
             " </tr>";
                 while (excLists.Count > 0)
                 {
@@ -212,7 +213,8 @@ namespace WebApplication7
                         table +=
                         "   <tr>" +
                         "       <td><a href = '" + (GenerateYT_Link(exc)) + "' >" + exc + "</a></td>" +
-                      "     <td>" + (GenerateRepsCount(exc)) + "</td>" +
+                      "     <td>" + (repAndSetCount[exc]) + "</td>" +
+                      "     <td>" + (restTime[exc]) + "</td>" +
                       " </tr>";
                     }
                     excLists.Remove(list);
@@ -340,7 +342,10 @@ namespace WebApplication7
             excLists =CheckIfAnyExcsRedundant(excLists, new Dictionary<string, Dictionary<string, int>>(muscleGroup_muscle_points));
             Debug.WriteLine("---------EXC LIST------------------");
             PrintPoints(muscleGroup_muscle_points);
-            LblTable.Text = BuildTable(excLists, workoutKind);
+            Dictionary<string, string> restTime = new Dictionary<string, string>(),
+                repAndSetCount = new Dictionary<string, string>();
+            GenerateRepsCountAndRest(repAndSetCount,restTime,excLists);
+            LblTable.Text = BuildTable(excLists, workoutKind,repAndSetCount,restTime);
 
         }
         protected List<List<string>> CheckIfAnyExcsRedundant(List<List<string>> excLists, Dictionary<string, Dictionary<string, int>> Local_muscleGroup_muscle_points)
@@ -512,58 +517,129 @@ namespace WebApplication7
             return Local_muscleGroup_muscle_points;
         }
         
-        protected string GenerateRepsCount(string exc)
+        protected void GenerateRepsCountAndRest(Dictionary<string, string> repAndSetCount, Dictionary<string, string> restTime, List<List<string>> excLists)
         {
-            string RepAndSetCount;
+            string repAndSetCountText,
+                rest;
+            int time = 0;
+                
             switch (WorkoutsFoucusRBL.SelectedValue)
             {
                 case "MG":
                     {
-                        if (IsExcCompound(exc))
+                        foreach (List<string> excList in excLists)
                         {
-                            RepAndSetCount = Rnd.Next(1, 3) == 2 ? "8" : "10";
-                            RepAndSetCount += " Reps for ";
-                            RepAndSetCount += Rnd.Next(1, 3) == 2 ? "3" : "4";
-                            RepAndSetCount += " Sets";
-                        }
-                        else
-                        {
-                            RepAndSetCount = Rnd.Next(1, 3) == 2 ? "12" : "14";
-                            RepAndSetCount += " Reps for ";
-                            RepAndSetCount += Rnd.Next(1, 3) == 2 ? "3" : "4";
-                            RepAndSetCount += " Sets";
+                            for (int i = 1; i < excList.Count; i++)
+                            {
+                                string exc = excList[i];
+                                if (IsExcCompound(exc))
+                                {
+                                    int a = Rnd.Next(1, 3);
+                                    repAndSetCountText = a == 2 ? "8" : "10";
+                                    repAndSetCountText += " Reps for ";
+                                    a = Rnd.Next(1, 3);
+                                    repAndSetCountText += a == 2 ? "3" : "4";
+                                    repAndSetCountText += " Sets";
+                                    time += a * 20;//actual exc time
+                                    time += a * 150;//rest time
+                                    rest = "2 - 3";
+                                }
+                                else
+                                {
+                                    int a = Rnd.Next(1, 3);
+                                    repAndSetCountText = a == 2 ? "12" : "14";
+                                    repAndSetCountText += " Reps for ";
+                                    a = Rnd.Next(1, 3);
+                                    repAndSetCountText += a == 2 ? "3" : "4";
+                                    repAndSetCountText += " Sets";
+                                    time += a * 25;//actual exc time
+                                    time += a * 90;//rest time
+                                    rest = "1 - 2";
+                                }
+                                repAndSetCount[exc] = repAndSetCountText;
+                                restTime[exc] = rest + " min";
+                            }
                         }
                         break;
                     }
-                default:
+                    default:
                     {
-                        if (IsExcCompound(exc))
+                        foreach (List<string> excList in excLists)
                         {
-                            RepAndSetCount = Rnd.Next(1, 3) == 2 ? "3" : "5";
-                            RepAndSetCount += " Reps for ";
-                            RepAndSetCount += Rnd.Next(1, 3) == 2 ? "3" : "4";
-                            RepAndSetCount += " Sets";
-                        }
-                        else
-                        {
-                            RepAndSetCount = Rnd.Next(1, 3) == 2 ? "8" : "10";
-                            RepAndSetCount += " Reps for ";
-                            RepAndSetCount += Rnd.Next(1, 3) == 2 ? "3" : "4";
-                            RepAndSetCount += " Sets";
+                            for (int i = 1; i < excList.Count; i++)
+                            {
+                                string exc = excList[i];
+                                if (IsExcCompound(exc))
+                                {
+                                    int a = Rnd.Next(1, 3);
+                                    repAndSetCountText = a == 2 ? "3" : "5";
+                                    repAndSetCountText += " Reps for ";
+                                    a = Rnd.Next(1, 3);
+                                    repAndSetCountText += a == 2 ? "3" : "4";
+                                    repAndSetCountText += " Sets";
+                                    time += a * 20;//actual exc time
+                                    time += a * 240;//rest time
+                                    rest = "3 - 5";
+                                }
+                                else
+                                {
+                                    int a = Rnd.Next(1, 3);
+                                    repAndSetCountText = a == 2 ? "8" : "10";
+                                    repAndSetCountText += " Reps for ";
+                                    a = Rnd.Next(1, 3);
+                                    repAndSetCountText += a == 2 ? "3" : "4";
+                                    repAndSetCountText += " Sets";
+                                    time += a * 25;//actual exc time
+                                    time += a * 90;//rest time
+                                    rest = "1 - 2";
+                                }
+                                repAndSetCount[exc] = repAndSetCountText;
+                                restTime[exc] = rest + " min";
+                            }
                         }
                         break;
                     }
-
             }
-            return RepAndSetCount;
-        }
-        protected void PrintLists(List<List<string>> excLists)
-        {
-            foreach (List<string> list in excLists)
+            int maxTime;
+            switch(WorkoutsLengthRBL.SelectedValue)
             {
-                foreach (string str in list)
+                case "1":
+                    maxTime = 45 * 60;
+                    break;
+                case "2":
+                    maxTime = 90 * 60;
+                    break;
+                default:
+                    maxTime = 120 * 60;
+                    break;
+            }
+            while (time > maxTime)
+            {
+                foreach (List<string> excList in excLists)
                 {
-                    Debug.WriteLine(str);
+                    for (int i = 1; i < excList.Count; i++)
+                    {
+                        string exc = excList[i];
+                        if (!IsExcCompound(exc)&& repAndSetCount[exc][11]=='4')
+                        {
+                            repAndSetCount[exc] = repAndSetCount[exc].Substring(0,11)+ 3 ;
+                            time -= 90;
+                            break;
+                        }
+                    }
+                    if (time > maxTime)
+                        break;
+                }
+            }
+            Debug.WriteLine("max:" + maxTime + " myTime:" + time);
+        }
+        protected void PrintLists(List<List<dynamic>> excLists)
+        {
+            foreach (List<dynamic> list in excLists)
+            {
+                foreach (object str in list)
+                {
+                    Debug.WriteLine(str.ToString());
                 }
             }
         }
