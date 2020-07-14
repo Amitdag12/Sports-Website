@@ -120,7 +120,7 @@ namespace WebApplication7
                 muscleGroup_muscle_points[muscleGroupName] = new Dictionary<string, int>();
                 foreach (string muscle in muscles)
                 {
-                    muscleGroup_muscle_points[muscleGroupName][muscle] = Array.IndexOf(majorMuscles, muscleGroupName) == -1 ? generalPoints : generalPoints + 5;//bigger nuscles get 5 more points than smaller muscles
+                    muscleGroup_muscle_points[muscleGroupName][muscle] = Array.IndexOf(majorMuscles, muscleGroupName) == -1 ? (generalPoints >20? 20 : generalPoints): generalPoints + 5;//bigger nuscles get 5 more points than smaller muscles
                     if (WorkoutKindRBL.SelectedItem.Text == "abc"&& muscleGroupName=="Leg")
                     {
                         muscleGroup_muscle_points[muscleGroupName][muscle] *= 2;
@@ -185,9 +185,10 @@ namespace WebApplication7
                     days["FULLBODY"] = new string[] { "Chest", "Shoulder", "Tricep", "Abs", "Back", "Bicep", "Leg" };
                     break;
             }
-            string table = "<table  border='1' style='width: 40 %; height: 70 %; text - align:center; margin: auto'class='Centerd NiceBacground'>";
+            string table= "";
             foreach (KeyValuePair<string, string[]> day in days)
             {
+                table += "<table  border='1' style='width: 40 %; height: 70 %; text - align:center; margin: auto'class='Centerd NiceBacground'>";               
                 table += "<tr>" +
             "  <th colspan = '2' class='headline'>" +
                     day.Key +
@@ -220,6 +221,7 @@ namespace WebApplication7
                     excLists.Remove(list);
                     index++;
                 }
+                table += "</table>";
             }
             return table;
         }
@@ -270,7 +272,31 @@ namespace WebApplication7
         }
         protected void CreateWotkout(object sender, EventArgs e)
         {
-
+            WotkoutCreater();
+        }
+        private int GenerteExcNum(string muscleGroup)
+        {
+            string[] mainMuscleGruopNames = new string[] { "Chest", "Back", "Leg" },
+                secondaryMuscleGruopNames = new string[] { "Shoulder", "Tricep", "Abs", "Bicep" };
+            int workoutKind = int.Parse(WorkoutKindRBL.SelectedValue),
+                workoutLength = int.Parse(WorkoutsLengthRBL.SelectedValue),
+                numberOfExc = workoutLength / workoutKind;//the calculation is thw workout kind which is 1-3 divided by how much time the workout is supposed to be
+            if(muscleGroup=="Leg"&& workoutKind == 1)
+            {
+                workoutLength += 3;//change is mae because plus 3 exc to the workou kin is prettey aproprite for leg day
+                return workoutLength > 6 ? 6 : workoutLength ;
+            }
+            if (workoutLength == 5&&workoutKind==1)
+            {
+                return Array.IndexOf(mainMuscleGruopNames, muscleGroup) != -1 ? 3 : 2;
+            }
+            return numberOfExc;
+        }
+        protected void WotkoutCreater()
+        {
+            DateTime startTime = DateTime.Now,
+                    runinugTime;
+            int startSecond = startTime.Second;
             string[] muscleGruopNames = new string[7] { "Chest", "Shoulder", "Tricep", "Abs", "Back", "Bicep", "Leg" };
             List<string> usedExc = new List<string>();
             string lowestMuscleUsed = "";
@@ -291,8 +317,8 @@ namespace WebApplication7
                 muscleGroupList.Add(exc);
                 usedExc.Add(exc);
                 // for (; i < numberOfExc; i++)
-                int i = 0;
-                while (IsNotWorkingAll(muscleGroup, muscleGroup_muscle_points)&&i<numberOfExc)
+                //while (IsNotWorkingAll(muscleGroup, muscleGroup_muscle_points))
+                for (int i = 0; i < GenerteExcNum(muscleGroup); i++)
                 {
 
 
@@ -322,11 +348,17 @@ namespace WebApplication7
                     {
                         break;
                     }
-                    i++;
+                    
                 }
                 excLists.Add(muscleGroupList);
                 max = 0;
                 lowestMuscleUsed = "";
+                runinugTime = DateTime.Now;
+                if (startTime.AddSeconds(3) < runinugTime)
+                {
+                    Debug.WriteLine("time:" + startTime);
+                    WotkoutCreater();
+                }
             }
             string workoutKind = "ABC";
             switch (WorkoutKindRBL.SelectedValue)
@@ -338,13 +370,13 @@ namespace WebApplication7
                     workoutKind = "AB";
                     break;
             }
-
             excLists =CheckIfAnyExcsRedundant(excLists, new Dictionary<string, Dictionary<string, int>>(muscleGroup_muscle_points));
             Debug.WriteLine("---------EXC LIST------------------");
             PrintPoints(muscleGroup_muscle_points);
             Dictionary<string, string> restTime = new Dictionary<string, string>(),
                 repAndSetCount = new Dictionary<string, string>();
             GenerateRepsCountAndRest(repAndSetCount,restTime,excLists);
+            Debug.WriteLine("here3");
             LblTable.Text = BuildTable(excLists, workoutKind,repAndSetCount,restTime);
 
         }
@@ -522,7 +554,6 @@ namespace WebApplication7
             string repAndSetCountText,
                 rest;
             int time = 0;
-                
             switch (WorkoutsFoucusRBL.SelectedValue)
             {
                 case "MG":
@@ -577,7 +608,7 @@ namespace WebApplication7
                                     a = Rnd.Next(1, 3);
                                     repAndSetCountText += a == 2 ? "3" : "4";
                                     repAndSetCountText += " Sets";
-                                    time += a * 20;//actual exc time
+                                    time += a * 35;//actual exc time
                                     time += a * 240;//rest time
                                     rest = "3 - 5";
                                 }
@@ -613,8 +644,6 @@ namespace WebApplication7
                     maxTime = 120 * 60;
                     break;
             }
-            while (time > maxTime)
-            {
                 foreach (List<string> excList in excLists)
                 {
                     for (int i = 1; i < excList.Count; i++)
@@ -622,7 +651,7 @@ namespace WebApplication7
                         string exc = excList[i];
                         if (!IsExcCompound(exc)&& repAndSetCount[exc][11]=='4')
                         {
-                            repAndSetCount[exc] = repAndSetCount[exc].Substring(0,11)+ 3 ;
+                            repAndSetCount[exc] = repAndSetCount[exc].Substring(0,11)+ 3 ;//removes 1 set from the excrcise
                             time -= 90;
                             break;
                         }
@@ -630,7 +659,6 @@ namespace WebApplication7
                     if (time > maxTime)
                         break;
                 }
-            }
             Debug.WriteLine("max:" + maxTime + " myTime:" + time);
         }
         protected void PrintLists(List<List<dynamic>> excLists)
