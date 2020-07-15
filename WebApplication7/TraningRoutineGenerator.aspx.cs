@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.IO;
 
 namespace WebApplication7
 {
     public partial class TraningRoutineGenerator : System.Web.UI.Page
     {
+        private const string select = "SELECT * FROM Excrcise WHERE ";
         private int restTimeIsolate;
         private string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='|DataDirectory|\Excrcises.mdf';Integrated Security=True";
         private Random Rnd = new Random();
@@ -16,13 +18,21 @@ namespace WebApplication7
         {
             if (!IsPostBack)
             {
-                for (int i = 1; i < 7; i++)
-                {
-                    difficultyDDL.Items.Add(i.ToString());
-                }
+                Session["connected"] = true;              
             }
         }
-
+        protected void CreateWotkout(object sender, EventArgs e)
+        {
+         //   try
+         //   {
+                WotkoutCreater();
+        //    }
+       //     catch (Exception ex)
+       //     {
+        //        Response.Write("<script>alert('please try again')</script>");
+     //       }
+            Response.Write("<script>stopAnimation()</script>");
+        }
         protected void PrintArray(string[] arr)
         {
             for (int i = 0; i < 5; i++)
@@ -36,7 +46,7 @@ namespace WebApplication7
         }
 
         /*
-         * Exchange Butoon?
+         * Exchange Button?
         //to finish
         protected void ExchangeExcrciseButton(object sender, EventArgs e)
         {
@@ -105,9 +115,9 @@ namespace WebApplication7
         }
 
         //-------------------------------------------------------------------NEW ALOGRITHM---------------------------------------------------------------------/
-        private Dictionary<string, Dictionary<string, int>> muscleGroup_muscle_points = new Dictionary<string, Dictionary<string, int>>();//a dictinary contaning muscle groups muscle inside that muscle group and number of points each muscle gets
+        private Dictionary<string, Dictionary<string, int>> muscleGroup_muscle_points = new Dictionary<string, Dictionary<string, int>>();//a dictionary containing muscle groups muscle inside that muscle group and number of points each muscle gets
 
-        protected void IntalizeMuscleDictionary(int generalPoints)//generalPoints is defind by like workout length and kind of workput
+        protected void IntalizeMuscleDictionary(int generalPoints)//generalPoints is defined by like workout length and kind of workout
         {
             generalPoints *= 5;
             string[] muscleGroupNames = new string[7] { "Chest", "Shoulder", "Tricep", "Abs", "Back", "Bicep", "Leg" };
@@ -127,7 +137,23 @@ namespace WebApplication7
             }
             muscleGroup_muscle_points["Leg"]["Leg Calves"] = 5;
         }
+        private void CreateProgramFile(string userID,string table)
+        {
+            string fileName = userID + "'s_program.txt";
+            string workingDirectory = Environment.CurrentDirectory;// This will get the current WORKING directory (i.e. \bin\Debug)
+            string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;// This will get the current PROJECT directory
+            string path = Path.Combine(projectDirectory, @"User_Data\", fileName);
 
+            if (!File.Exists(path))
+            {
+                // Create a file to write to.
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    File.WriteAllText(path, table);
+                }
+            }
+
+        }
         protected List<string> GetMusclesGroupMuscles(string muscleGroup)
         {//puts individual muscle inside muscle groups
             string[] names = new string[20]{"Shoulder  front deltoid","Shoulder  rear deltoid","Shoulder lateral deltoid","Bicep short",
@@ -157,7 +183,7 @@ namespace WebApplication7
         }
 
         /*
-         * excLists shoulg go in the following order:
+         * excLists should go in the following order:
          * "Chest", "Shoulder", "Tricep", "Abs" , "Back", "Bicep","Leg"
          *
          *
@@ -226,17 +252,16 @@ namespace WebApplication7
             return table;
         }
 
-        protected string PullMainExc(string muscleGroup, bool iscompound, string[] usedExc, int IsStreet)
+        protected string PullMainExc(string muscleGroup, bool iscompound, string[] usedExc)
         {
             DataSet dataset = new DataSet();
 
             List<string> excList = new List<string>();
             int isIsolate = iscompound ? 0 : 1;
             string exc,
-                Difficulty = " AND (Difficulty =" + difficultyDDL.SelectedItem.Text + " OR Difficulty =" + (int.Parse(difficultyDDL.SelectedItem.Text) - 1) + ")",
-             street = IsStreet == 1 ? " AND Street= 1" : "",
+                Difficulty = " AND (Difficulty =" + difficultyDDL.SelectedValue + " OR Difficulty =" + (int.Parse(difficultyDDL.SelectedValue) - 1) + ")",
              connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='|DataDirectory|\Excrcises.mdf';Integrated Security=True",
-             commandUserString = "SELECT * FROM Excrcise WHERE " + muscleGroup + "=" + 1 + Difficulty + " AND IsIsolate=" + isIsolate + street;
+             commandUserString = select + muscleGroup + "=" + 1 + Difficulty + " AND IsIsolate=" + isIsolate;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -257,7 +282,7 @@ namespace WebApplication7
 
         /*
          * the idea behind this is to create a workout which centers around one big exc for each muscle group and then filling
-         * the rest of the excrcises for that muscle group with smaller excrcises which work on the muscles that are most not used
+         * the rest of the exercises for that muscle group with smaller exercises which work on the muscles that are most not used
          */
 
         protected bool IsNotWorkingAll(string muscleGroup, Dictionary<string, Dictionary<string, int>> muscleGroup_muscle_points)
@@ -274,18 +299,7 @@ namespace WebApplication7
             return false;
         }
 
-        protected void CreateWotkout(object sender, EventArgs e)
-        {
-            try
-            {
-                WotkoutCreater();
-            }
-            catch (Exception ex)
-            {
-                Response.Write("<script>alert('please try again')</script>");
-            }
-            Response.Write("<script>stopAnimation()</script>");
-        }
+        
 
         private int GenerteExcNum(string muscleGroup)
         {
@@ -293,10 +307,10 @@ namespace WebApplication7
                 secondaryMuscleGruopNames = new string[] { "Shoulder", "Tricep", "Abs", "Bicep" };
             int workoutKind = int.Parse(WorkoutKindRBL.SelectedValue),
                 workoutLength = int.Parse(WorkoutsLengthRBL.SelectedValue),
-                numberOfExc = workoutLength / workoutKind;//the calculation is thw workout kind which is 1-3 divided by how much time the workout is supposed to be
+                numberOfExc = workoutLength / workoutKind;//the calculation is the workout kind which is 1-3 divided by how much time the workout is supposed to be
             if (muscleGroup == "Leg" && workoutKind == 1)
             {
-                workoutLength += 3;//change is mae because plus 3 exc to the workou kin is prettey aproprite for leg day
+                workoutLength += 3;//change is made because plus 3 exc to the workout kind is pretty appropriate for leg day
                 return workoutLength > 6 ? 6 : workoutLength;
             }
             if (workoutLength == 5 && workoutKind == 1)
@@ -315,7 +329,7 @@ namespace WebApplication7
             List<string> usedExc = new List<string>();
             string lowestMuscleUsed = "";
             int max = 1;
-            int numberOfExc = int.Parse(Math.Round(double.Parse(WorkoutsLengthRBL.SelectedValue) / double.Parse(WorkoutKindRBL.SelectedValue)).ToString());//the calculation is thw workout kind which is 1-3 divided by how much time the workout is supposed to be
+            int numberOfExc = int.Parse(Math.Round(double.Parse(WorkoutsLengthRBL.SelectedValue) / double.Parse(WorkoutKindRBL.SelectedValue)).ToString());//the calculation is the workout kind which is 1-3 divided by how much time the workout is supposed to be
             IntalizeMuscleDictionary(numberOfExc);
             string exc;
             Debug.WriteLine("---------------------" + numberOfExc);
@@ -326,7 +340,7 @@ namespace WebApplication7
             {
                 List<string> muscleGroupList = new List<string>();
                 muscleGroupList.Add(muscleGroup);
-                exc = PullMainExc(muscleGroup, true, usedExc.ToArray(), int.Parse(TypeOfWorkoutRBL.SelectedValue));
+                exc = PullMainExc(muscleGroup, true, usedExc.ToArray());
                 muscleGroup_muscle_points = SubtractAndAddExc(exc, muscleGroup_muscle_points, "-");
                 muscleGroupList.Add(exc);
                 usedExc.Add(exc);
@@ -389,7 +403,12 @@ namespace WebApplication7
                 repAndSetCount = new Dictionary<string, string>();
             GenerateRepsCountAndRest(repAndSetCount, restTime, excLists);
             Debug.WriteLine("here3");
-            LblTable.Text = BuildTable(excLists, workoutKind, repAndSetCount, restTime);
+            string table= BuildTable(excLists, workoutKind, repAndSetCount, restTime);
+            LblTable.Text = table;
+            if ((bool)(Session["connected"]))
+            {
+                CreateProgramFile("Admin", table);
+            }
         }
 
         protected List<List<string>> CheckIfAnyExcsRedundant(List<List<string>> excLists, Dictionary<string, Dictionary<string, int>> Local_muscleGroup_muscle_points)
@@ -399,7 +418,7 @@ namespace WebApplication7
                 for (int i = 1; i < excList.Count; i++)
                 {
                     string exc = excList[i];
-                    if (!IsExcNecessary(exc))//check if after removing the exc still working all muscls
+                    if (!IsExcNecessary(exc))//check if after removing the exc still working all muscles
                     {
                         SubtractAndAddExc(exc, muscleGroup_muscle_points, "+");
                         excList.Remove(exc);
@@ -431,7 +450,7 @@ namespace WebApplication7
                     getMusclePoint = "SELECT [" + column.ToString() + "] FROM MuscleWork WHERE name='" + exc + "'";
                     sqlCommand = new SqlCommand(getMusclePoint, connection);
                     int musclePoint = (int)sqlCommand.ExecuteScalar();
-                    if (muscleGroup_muscle_points[FirstWord(column.ToString())][column.ToString()] + musclePoint > 0)//gets each colmun muslce group because first word and then by colmun and either adds or subtracts
+                    if (muscleGroup_muscle_points[FirstWord(column.ToString())][column.ToString()] + musclePoint > 0)//gets each column muscle group because first word and then by column and either adds or subtracts
                     {
                         isNecessary = true;
                     }
@@ -450,10 +469,9 @@ namespace WebApplication7
             string exc;
             string finalExc = "";
             int max = 0;
-            string Difficulty = " AND (Difficulty =" + difficultyDDL.SelectedItem.Text + " OR Difficulty =" + (int.Parse(difficultyDDL.SelectedItem.Text) - 1) + ")",
-            street = int.Parse(TypeOfWorkoutRBL.SelectedValue) == 1 ? " AND Street= 1" : "",
+            string Difficulty = " AND (Difficulty =" + difficultyDDL.SelectedValue + " OR Difficulty =" + (int.Parse(difficultyDDL.SelectedValue) - 1) + ")",
             muslceG = " AND [" + muscleGroup + "] =1";//muscle group check
-            string isCompound = TypeOfWorkoutRBL.SelectedValue == "MG" ? "" : " AND IsCompound=1 ";
+            string isCompound = WorkoutsFoucusRBL.SelectedValue == "MG" ? "" : " AND IsCompound=1 ";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -464,7 +482,7 @@ namespace WebApplication7
                 foreach (DataRow row in dataset.Tables[0].Rows)
                 {
                     exc = row["name"].ToString();
-                    string checkIfExcGood = "SELECT COUNT(*) FROM Excrcise WHERE name='" + exc + "'" + Difficulty + street + muslceG;// +isCompound;//+ isIsolate
+                    string checkIfExcGood = "SELECT COUNT(*) FROM Excrcise WHERE name='" + exc + "'" + Difficulty + muslceG;// +isCompound;//+ isIsolate
                     sqlCommand = new SqlCommand(checkIfExcGood, connection);
                     if (int.Parse(row[muscle].ToString()) > max && Array.IndexOf(usedExc, exc) == -1 && (int)sqlCommand.ExecuteScalar() == 1)
                     {
@@ -545,9 +563,9 @@ namespace WebApplication7
                     // Debug.WriteLine("-------------------------------");
                     // Debug.WriteLine("A: "+ column.ToString());
                     //   Debug.WriteLine("B: " + FirstWord(column.ToString()));
-                    // Debug.WriteLine(getMusclePoint);
+                     Debug.WriteLine(getMusclePoint);
                     int musclePoint = (int)sqlCommand.ExecuteScalar();
-                    if (mathSymbol.Equals("-"))//gets each colmun muslce group because first word and then by colmun and either adds or subtracts
+                    if (mathSymbol.Equals("-"))//gets each column muscle group because first word and then by column and either adds or subtracts
                     {
                         Local_muscleGroup_muscle_points[FirstWord(column.ToString())][column.ToString()] -= musclePoint;
                     }
@@ -664,7 +682,7 @@ namespace WebApplication7
                     string exc = excList[i];
                     if (!IsExcCompound(exc) && repAndSetCount[exc][11] == '4')
                     {
-                        repAndSetCount[exc] = repAndSetCount[exc].Substring(0, 11) + 3;//removes 1 set from the excrcise
+                        repAndSetCount[exc] = repAndSetCount[exc].Substring(0, 11) + 3;//removes 1 set from the Excrcise
                         time -= 90;
                         break;
                     }
