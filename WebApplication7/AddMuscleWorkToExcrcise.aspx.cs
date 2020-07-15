@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
 using System.Data;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using System.Data.SqlClient;
 
 namespace WebApplication7
 {
     public partial class AddMuscleWorkToExcrcise : System.Web.UI.Page
     {
         //i realy dont want to give the DDL names so they in the order of the table
-        static string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='|DataDirectory|\Excrcises.mdf';Integrated Security=True";
+        private static string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='|DataDirectory|\Excrcises.mdf';Integrated Security=True";
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(!IsPostBack)
+            if (!IsPostBack)
             {
                 DataSet dataSet = GetAllExc();
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -29,7 +25,6 @@ namespace WebApplication7
                         {
                             DDL_ExcNames.Items.Add(Row["name"].ToString());
                         }
-
                     }
                 }
                 for (int i = 0; i < 6; i++)
@@ -57,6 +52,7 @@ namespace WebApplication7
                 }
             }
         }
+
         protected DataSet GetAllExc()
         {
             string commandUserString = "SELECT * FROM Excrcise";
@@ -70,9 +66,9 @@ namespace WebApplication7
             }
             return dataset;
         }
+
         protected void AddExcrciseToTable(object sender, EventArgs e)
         {
-
             string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='|DataDirectory|\Excrcises.mdf';Integrated Security=True";
             string name = DDL_ExcNames.SelectedItem.Text;
             string strCheckExcrciseName = "SELECT count(*) FROM MuscleWork WHERE name = '" + name + "'";
@@ -86,11 +82,9 @@ namespace WebApplication7
                     Response.Write("<script>alert('already exist')</script>");
                     return;
                 }
-
             }
 
-
-            string cmdInsertString1 = "INSERT INTO MuscleWork VALUES ('" + name + "', "+
+            string cmdInsertString1 = "INSERT INTO MuscleWork VALUES ('" + name + "', " +
                 int.Parse(DropDownList1.SelectedItem.Text) + "," +
                 int.Parse(DropDownList2.SelectedItem.Text) + ","
                 + int.Parse(DropDownList3.SelectedItem.Text) + ","
@@ -123,7 +117,6 @@ namespace WebApplication7
                 Response.Redirect("AddMuscleWorkToExcrcise.aspx");
             }
             catch (Exception ex) { }
-
         }
     }
 }

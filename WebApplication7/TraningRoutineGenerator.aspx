@@ -1,48 +1,56 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Excrcise.Master" AutoEventWireup="true" CodeBehind="TraningRoutineGenerator.aspx.cs" Inherits="WebApplication7.TraningRoutineGenerator" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
-        .DiffHelpImg{
+        .DiffHelpImg {
+        }
 
+        .DiffHelpTxt {
+            visibility: hidden;
         }
-        .DiffHelpTxt{
-            visibility:hidden;
-        }
+
         img.DiffHelpImg:hover + .DiffHelpTxt {
             visibility: visible;
         }
-        .KindHelpImg{
 
+        .KindHelpImg {
         }
-        .KindHelpTxt{
-            visibility:hidden;
+
+        .KindHelpTxt {
+            visibility: hidden;
         }
+
         img.KindHelpImg:hover + .KindHelpTxt {
             visibility: visible;
         }
+
         .auto-style4 {
             width: 114px;
             height: 230px;
         }
-        .MuscleLight :hover
-        {
-            background-color:lawngreen;
-        }
-        .MuscleGroups
-        {
 
+        .MuscleLight :hover {
+            background-color: lawngreen;
         }
+
+        .MuscleGroups {
+        }
+
         .auto-style5 {
             width: 46px;
             height: 276px;
         }
+
         .auto-style6 {
             width: 125px;
             height: 306px;
         }
+
         .auto-style7 {
             width: 53px;
             height: 271px;
         }
+
         .auto-style8 {
             width: 80px;
             height: 109px;
@@ -52,69 +60,87 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
-    <div id="RegesterDIv" class="Centerd NiceBacground" style="width:50%;">
+    <div id="RegesterDIv" class="Centerd NiceBacground" style="width: 50%;">
         <h3>How much time the workout should be?</h3>
         <asp:RadioButtonList ID="WorkoutsLengthRBL" runat="server" CssClass="radioButtonList ListItemCenterd" RepeatDirection="Horizontal">
             <asp:ListItem Value="1">45 min</asp:ListItem>
-            <asp:ListItem Value="2" selected="True" >60-90 min</asp:ListItem>
-            <asp:ListItem Value="5" >90+ min</asp:ListItem>
+            <asp:ListItem Value="2" Selected="True">60-90 min</asp:ListItem>
+            <asp:ListItem Value="5">90+ min</asp:ListItem>
         </asp:RadioButtonList>
         <br />
         <br />
-        <h3>What the diffuclty of the workout should be?</h3>
-        <asp:DropDownList ID="difficultyDDL" runat="server">            
+        <h3>What the difficulty of the workout should be?</h3>
+        <asp:DropDownList ID="difficultyDDL" runat="server">
+            <asp:ListItem Value="1">Beginner</asp:ListItem>
+            <asp:ListItem Value="2" Selected="True">experienced</asp:ListItem>
         </asp:DropDownList>
-        <img src="https://img.icons8.com/android/24/000000/info.png" id="DiffHelpImg" class="DiffHelpImg"/>
+        <img src="https://img.icons8.com/android/24/000000/info.png" id="DiffHelpImg" class="DiffHelpImg" />
         <p id="HelpTxt" class="DiffHelpTxt">
-            for example:
-            <br />
-            1-wall pushup
-            <br />
-            2-knee pushup
-            <br />
-            3-regular pushups
-            <br />
-            4-decline pushups
-            <br />
-            5-one arm pushup
-            <br />
-            6-full planch pushups
-            <br />
-            *mostly releveant to body workouts
+            Beginner- for people who don't want complex movements in their program like dead-lifts and squats
+            experienced- for people who want complex movements in their program my also include more advanced tactics like super sets and drop sets
         </p>
-        <h3>Type of workout:</h3>
-        <asp:RadioButtonList ID="TypeOfWorkoutRBL" runat="server" CssClass="radioButtonList ListItemCenterd" RepeatDirection="Horizontal">
-            <asp:ListItem Value="0" selected="True">gym assisted</asp:ListItem>
-            <asp:ListItem Value="1" >body weight</asp:ListItem>
-        </asp:RadioButtonList>
         <br />
         <br />
         <br />
         <br />
         <h3>What Kind of split you would like?</h3>
         <asp:RadioButtonList ID="WorkoutKindRBL" runat="server" CssClass="radioButtonList ListItemCenterd" RepeatDirection="Horizontal">
-            <asp:ListItem Value="3" selected="True">full body</asp:ListItem>
-            <asp:ListItem Value="2" >ab</asp:ListItem>
-            <asp:ListItem Value="1" >abc</asp:ListItem>
-        </asp:RadioButtonList>  
+            <asp:ListItem Value="3" Selected="True">full body</asp:ListItem>
+            <asp:ListItem Value="2">ab</asp:ListItem>
+            <asp:ListItem Value="1">abc</asp:ListItem>
+        </asp:RadioButtonList>
         <br />
-        <img src="https://img.icons8.com/android/24/000000/info.png" id="KindHelpImg" class="KindHelpImg"/>
+        <img src="https://img.icons8.com/android/24/000000/info.png" id="KindHelpImg" class="KindHelpImg" />
         <p class="KindHelpTxt">
             full body- each workout will work your whole body
             <br />
-            ab- two diffrent workouts will work on diffrent kind of muscle groups
+            ab- two different workouts will work on different kind of muscle groups
             <br />
-            abc-three diffrent workouts will work on diffrent kind of muscle groups
+            abc-three different workouts will work on different kind of muscle groups
         </p>
         <h3>What the focus of your workouts:</h3>
         <asp:RadioButtonList ID="WorkoutsFoucusRBL" runat="server" CssClass="radioButtonList ListItemCenterd" RepeatDirection="Horizontal">
-            <asp:ListItem Value="MG" selected="True">muscle building</asp:ListItem>
-            <asp:ListItem Value="SG" >strength</asp:ListItem>
-            
+            <asp:ListItem Value="MG" Selected="True">muscle building</asp:ListItem>
+            <asp:ListItem Value="SG">strength</asp:ListItem>
         </asp:RadioButtonList>
-        <asp:Button ID="CreateRoutine" runat="server" Text="Create me a workout" OnClick="CreateWotkout" />
+        <asp:Button ID="CreateRoutine" runat="server" Text="Create me a workout" OnClientClick="showLoading()" OnClick="CreateWotkout" />
     </div>
-    
-    <asp:Label ID="LblTable" runat="server" Text="Label"></asp:Label>
-    Icons made by <a href="https://www.flaticon.com/authors/pixelmeetup" title="Pixelmeetup">Pixelmeetup</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+    <div style="margin-left: auto; margin-right: auto; text-align: center;">
+        <asp:Label ID="LblTable" runat="server" Text="" ClientIDMode="Static" CssClass="Centerd"></asp:Label>
+    </div>
+    <script type="text/javascript">
+        var w;
+        function startLoadingAnumationWorker(table) {
+            var periodNum = 0;
+            if (typeof (Worker) !== "undefined") {
+                if (typeof (w) == "undefined") {
+                    w = new Worker("animationTiming.js");
+                }
+                w.onmessage = function (event) {
+                    if (periodNum > 6) {
+                        table.innerHTML = "LOADING";
+                    } else {
+                        table.innerHTML += ".";
+                    }
+                    periodNum += 1;
+                };
+            }
+            else {
+                document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Workers...";
+            }
+        }
+        function showLoading() {
+            var table = document.getElementById("LblTable");
+            table.style.fontSize = "70px";
+            table.style.textAlign = "center";
+            table.style.margin = "auto";
+            table.innerHTML = "LOADING";
+            startLoadingAnumationWorker(table);
+        }
+
+        function stopAnimation() {
+            w.terminate();
+            w = undefined;
+        }
+    </script>
 </asp:Content>

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace WebApplication7
 {
@@ -16,7 +11,6 @@ namespace WebApplication7
 
         protected void AddExcrciseToTable(object sender, EventArgs e)
         {
-
             string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='|DataDirectory|\Excrcises.mdf';Integrated Security=True";
             string name = TxtExcrciseName.Text;
             string strCheckExcrciseName = "SELECT count(*) FROM Excrcise WHERE name = '" + name + "'";
@@ -30,17 +24,16 @@ namespace WebApplication7
                     Response.Write("<script>alert('already exist')</script>");
                     return;
                 }
-
             }
             int compound = IsCompundOrIsolate.SelectedValue == "IsCompound" ? 1 : 0,
                 isolate = (compound + 1) % 2;
-            
-            string cmdInsertString1 = "INSERT INTO Excrcise VALUES ('"+name+"', " + compound + "," + isolate + "," + 
-                int.Parse(Shoulder.SelectedValue) + "," + 
+
+            string cmdInsertString1 = "INSERT INTO Excrcise VALUES ('" + name + "', " + compound + "," + isolate + "," +
+                int.Parse(Shoulder.SelectedValue) + "," +
                 int.Parse(Triceps.SelectedValue) + ","
-                + int.Parse(Lats.SelectedValue) + "," 
-                + int.Parse(Chest.SelectedValue) + "," 
-                + int.Parse(Biceps.SelectedValue) + "," 
+                + int.Parse(Lats.SelectedValue) + ","
+                + int.Parse(Chest.SelectedValue) + ","
+                + int.Parse(Biceps.SelectedValue) + ","
                 + int.Parse(Abs.SelectedValue) + ","
                 + int.Parse(Legs.SelectedValue) + ","
                 + int.Parse(Difficult.Text) + ","
@@ -55,10 +48,11 @@ namespace WebApplication7
                     sqlCommand.ExecuteNonQuery();
                 }
                 Response.Redirect("AddExcrcise.aspx");
-            }catch(Exception ex) {
-                Response.Write("<script>alert('"+ex.Message+"')</script>");
             }
-             
+            catch (Exception ex)
+            {
+                Response.Write("<script>alert('" + ex.Message + "')</script>");
+            }
         }
     }
 }
