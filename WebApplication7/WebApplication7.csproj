@@ -44,6 +44,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -78,6 +79,7 @@
     <Content Include="App_Data\Users_DB_log.ldf">
       <DependentUpon>Users_DB.mdf</DependentUpon>
     </Content>
+    <Content Include="FrontPage.aspx" />
     <Content Include="HtmlPage1.html" />
     <Content Include="Human Schem\Back.png" />
     <Content Include="Human Schem\BackHand.png" />
@@ -90,7 +92,9 @@
     <Content Include="Human Schem\FrontHandLeft.png" />
     <Content Include="Human Schem\FrontHead.png" />
     <Content Include="Human Schem\FrontLegs.png" />
+    <Content Include="Login.aspx" />
     <Content Include="Photos\Background.jpg" />
+    <Content Include="Register.aspx" />
     <Content Include="TraningRoutineGenerator.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -109,6 +113,7 @@
     <Compile Include="AddMuscleWorkToExcrcise.aspx.designer.cs">
       <DependentUpon>AddMuscleWorkToExcrcise.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Anigma.cs" />
     <Compile Include="Excrcise.Master.cs">
       <DependentUpon>Excrcise.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -116,11 +121,32 @@
     <Compile Include="Excrcise.Master.designer.cs">
       <DependentUpon>Excrcise.Master</DependentUpon>
     </Compile>
+    <Compile Include="FrontPage.aspx.cs">
+      <DependentUpon>FrontPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FrontPage.aspx.designer.cs">
+      <DependentUpon>FrontPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Register.aspx.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Register.aspx.designer.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
     </Compile>
     <Compile Include="TraningRoutineGenerator.aspx.cs">
       <DependentUpon>TraningRoutineGenerator.aspx</DependentUpon>
