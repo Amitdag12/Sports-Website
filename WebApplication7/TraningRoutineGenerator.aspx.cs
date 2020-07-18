@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
+using System.Security.Permissions;
 
 namespace WebApplication7
 {
@@ -137,22 +138,12 @@ namespace WebApplication7
             }
             muscleGroup_muscle_points["Leg"]["Leg Calves"] = 5;
         }
+        //[FileIOPermission(SecurityAction.PermitOnly, PathDiscovery = @"C:\Users\gilda\Desktop\Sports Website\User_Data")]
         private void CreateProgramFile(string userID,string table)
-        {
-            string fileName = userID + "'s_program.txt";
-            string workingDirectory = Environment.CurrentDirectory;// This will get the current WORKING directory (i.e. \bin\Debug)
-            string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;// This will get the current PROJECT directory
-            string path = Path.Combine(projectDirectory, @"User_Data\", fileName);
-
-            if (!File.Exists(path))
-            {
-                // Create a file to write to.
-                using (StreamWriter sw = File.CreateText(path))
-                {
-                    File.WriteAllText(path, table);
-                }
-            }
-
+        { 
+            string fileName = userID + "'s_program.txt",
+                   path= @"C:\Users\gilda\Desktop\Sports Website\WebApplication7\User_Data\" + fileName;            
+             File.WriteAllText(path, table);
         }
         protected List<string> GetMusclesGroupMuscles(string muscleGroup)
         {//puts individual muscle inside muscle groups
@@ -215,13 +206,13 @@ namespace WebApplication7
             string table = "";
             foreach (KeyValuePair<string, string[]> day in days)
             {
-                table += "<table  border='1' style='width: 40 %; height: 70 %; text - align:center; margin: auto'class='Centerd NiceBacground'>";
-                table += "<tr>" +
-            "  <th colspan = '2' class='headline'>" +
+                table += "<table  border='1' style='width: 40 %; height: 70 %; text - align:center; margin: auto'class='Centerd NiceBacground'>\n";
+                table += "<tr>\n" +
+            "  <th colspan = '2' class='headline'>\n" +
                     day.Key +
-                " </th>" +
-                "  <th colspan = '2' class='headline'>Rest time</ th > " +
-            " </tr>";
+                " </th>\n" +
+                "  <th colspan = '2' class='headline'>Rest time</ th > \n" +
+            " </tr>\n";
                 while (excLists.Count > 0)
                 {
                     List<string> list = excLists[0];
@@ -231,23 +222,23 @@ namespace WebApplication7
                         break;
                     }
                     table +=
-                  "<tr>" +
-                        "<th colspan = '2' class='headline'>" + list[0] + "</th>" +
-                  " </tr> ";
+                  "<tr>\n" +
+                        "<th colspan = '2' class='headline'>" + list[0] + "</th>\n" +
+                  " </tr> \n";
                     list.Remove(list[0]);
                     foreach (string exc in list)
                     {
                         table +=
-                        "   <tr>" +
-                        "       <td><a href = '" + (GenerateYT_Link(exc)) + "' >" + exc + "</a></td>" +
-                      "     <td>" + (repAndSetCount[exc]) + "</td>" +
-                      "     <td>" + (restTime[exc]) + "</td>" +
-                      " </tr>";
+                        "   <tr>\n" +
+                        "       <td><a href = '" + (GenerateYT_Link(exc)) + "' >" + exc + "</a></td>\n" +
+                      "     <td>" + (repAndSetCount[exc]) + "</td>\n" +
+                      "     <td>" + (restTime[exc]) + "</td>\n" +
+                      " </tr>\n";
                     }
                     excLists.Remove(list);
                     index++;
                 }
-                table += "</table>";
+                table += "</table>\n";
             }
             return table;
         }

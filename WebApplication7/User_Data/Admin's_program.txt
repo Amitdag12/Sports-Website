@@ -1,0 +1,63 @@
+<table  border='1' style='width: 40 %; height: 70 %; text - align:center; margin: auto'class='Centerd NiceBacground'>
+<tr>
+  <th colspan = '2' class='headline'>
+FULLBODY </th>
+  <th colspan = '2' class='headline'>Rest time</ th > 
+ </tr>
+<tr>
+<th colspan = '2' class='headline'>Chest</th>
+ </tr> 
+   <tr>
+       <td><a href = ' https://www.youtube.com/results?search_query=Barbell+Incline+Bench+PressMedium-Grip' >Barbell Incline Bench Press Medium-Grip</a></td>
+     <td>8 Reps for 4 Sets</td>
+     <td>2 - 3 min</td>
+ </tr>
+<tr>
+<th colspan = '2' class='headline'>Shoulder</th>
+ </tr> 
+   <tr>
+       <td><a href = ' https://www.youtube.com/results?search_query=Militarypress' >Military press</a></td>
+     <td>10 Reps for 3 Sets</td>
+     <td>2 - 3 min</td>
+ </tr>
+<tr>
+<th colspan = '2' class='headline'>Tricep</th>
+ </tr> 
+   <tr>
+       <td><a href = ' https://www.youtube.com/results?search_query=Pushups*' >Pushups*</a></td>
+     <td>8 Reps for 3 Sets</td>
+     <td>2 - 3 min</td>
+ </tr>
+<tr>
+<th colspan = '2' class='headline'>Abs</th>
+ </tr> 
+   <tr>
+       <td><a href = ' https://www.youtube.com/results?search_query=Hanging+legraise' >Hanging leg raise</a></td>
+     <td>8 Reps for 4 Sets</td>
+     <td>2 - 3 min</td>
+ </tr>
+<tr>
+<th colspan = '2' class='headline'>Back</th>
+ </tr> 
+   <tr>
+       <td><a href = ' https://www.youtube.com/results?search_query=Deadlifts' >Deadlifts</a></td>
+     <td>10 Reps for 4 Sets</td>
+     <td>2 - 3 min</td>
+ </tr>
+<tr>
+<th colspan = '2' class='headline'>Bicep</th>
+ </tr> 
+   <tr>
+       <td><a href = ' https://www.youtube.com/results?search_query=EZ-BarCurl' >EZ-Bar Curl</a></td>
+     <td>8 Reps for 4 Sets</td>
+     <td>2 - 3 min</td>
+ </tr>
+<tr>
+<th colspan = '2' class='headline'>Leg</th>
+ </tr> 
+   <tr>
+       <td><a href = ' https://www.youtube.com/results?search_query=Barbell+FullSquat' >Barbell Full Squat</a></td>
+     <td>10 Reps for 3 Sets</td>
+     <td>2 - 3 min</td>
+ </tr>
+</table>

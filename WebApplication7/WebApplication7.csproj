@@ -74,6 +74,10 @@
       <DependentUpon>Excrcises.mdf</DependentUpon>
     </Content>
     <Content Include="animationTiming.js" />
+    <Content Include="App_Data\Users_DB.mdf" />
+    <Content Include="App_Data\Users_DB_log.ldf">
+      <DependentUpon>Users_DB.mdf</DependentUpon>
+    </Content>
     <Content Include="HtmlPage1.html" />
     <Content Include="Human Schem\Back.png" />
     <Content Include="Human Schem\BackHand.png" />
