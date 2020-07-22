@@ -17,9 +17,9 @@ namespace WebApplication7
 
         protected void BtnRegister_Click(object sender, EventArgs e)
         {
-            string username = TxtUsername.Text;
-            string password = TxtPassword.Text;
-            string email = TxtEmail.Text;
+            string username = Anigma.Crypt(TxtUsername.Text);
+            string password = Anigma.Crypt(TxtPassword.Text);
+            string email = Anigma.Crypt(TxtEmail.Text);
             string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='|DataDirectory|\Users_DB.mdf';Integrated Security=True";
             string strCheckUsername = "SELECT count(*) FROM Users WHERE Username = '" + username + "'";
 
@@ -35,18 +35,21 @@ namespace WebApplication7
                 }
 
             }
-
-            string cmdInsertString1= "select count(*) FROM Users";
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                connection.Open();
-                SqlCommand sqlCommand = new SqlCommand(cmdInsertString1, connection);
-                int id = (int)sqlCommand.ExecuteScalar();                
-                cmdInsertString1 = "INSERT INTO Users VALUES (' " +Anigma.Crypt(username) + "','" + Anigma.Crypt(password) + "','" + Convert.ToString(id, 16)+ "','" + Anigma.Crypt(email) + "')";//converts id to base 16 and encrypts data
-                sqlCommand = new SqlCommand(cmdInsertString1, connection);
-                sqlCommand.ExecuteNonQuery();
-                Response.Redirect("Login.aspx");
+                string cmdInsertString1 = "select count(*) FROM Users";
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    SqlCommand sqlCommand = new SqlCommand(cmdInsertString1, connection);
+                    int id = (int)sqlCommand.ExecuteScalar();
+                    cmdInsertString1 = "INSERT INTO Users VALUES (' "+ username + "','" + password + "','" + Convert.ToString(id, 16) + "','" + email + "')";//converts id to base 16 and encrypts data
+                    sqlCommand = new SqlCommand(cmdInsertString1, connection);
+                    sqlCommand.ExecuteNonQuery();
+                    Response.Redirect("Login.aspx");
+                }
             }
+            catch (Exception ex) { }
         }
     }
 }

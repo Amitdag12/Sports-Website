@@ -26,7 +26,7 @@ namespace WebApplication7
             else
             {
                 string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='|DataDirectory|\Users_DB.mdf';Integrated Security=True";
-                string strCheckUsernamePassword = "SELECT count(*) FROM Users WHERE Username = '" + Anigma.Crypt(username) + "'" + "and password ='" + Anigma.Crypt(password) + "'";
+                string strCheckUsernamePassword = "SELECT count(*) FROM Users WHERE Username = '" + Anigma.Crypt(username) + "'" + "and Password ='" + Anigma.Crypt(password) + "'";
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {

@@ -38,7 +38,7 @@
 	</div>
   <div  style="text-align:center;margin:auto;font-size:34px;">
         <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
-	<a href="8-register.aspx">הרשמה</a>
+	<a href="Register.aspx">הרשמה</a>
   </div>
 
 </asp:Content>
