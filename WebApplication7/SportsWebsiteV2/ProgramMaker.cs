@@ -91,12 +91,18 @@ namespace SportsWebsiteV2
             int rowNum = dataSet.Tables[0].Rows.Count;
             if (rowNum != 0)
             {
+                bool isIn;
                 do
                 {
                     excName = dataSet.Tables[0].Rows[Rnd.Next(0, rowNum)]["name"].ToString();//get a random exc that meets the requirement
+                    isIn = exerciseList.GetExcList(muscleGroup).Any(x => x.name == excName);//to check if an exc exist
+                    if (isIn && microMuscle == "Leg Calves")
+                    {
+                        return PullExc(muscleGroup, IsCompound);
+                    }
                     exc = new Exercise(excName, IsExcCompound(excName));
-                    Debug.WriteLine(excName);
-                } while (exerciseList.GetExcList(muscleGroup).Any(x => x.name == excName));
+                    Debug.WriteLine(microMuscle);
+                } while (isIn);
                 return exc;
             }
             else
