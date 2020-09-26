@@ -63,9 +63,9 @@
     <div id="RegesterDIv" class="Centerd NiceBacground" style="width: 50%;">
         <h3>How much time the workout should be?</h3>
         <asp:RadioButtonList ID="WorkoutsLengthRBL" runat="server" CssClass="radioButtonList ListItemCenterd" RepeatDirection="Horizontal">
-            <asp:ListItem Value="1">45 min</asp:ListItem>
-            <asp:ListItem Value="2" Selected="True">60-90 min</asp:ListItem>
-            <asp:ListItem Value="5">90+ min</asp:ListItem>
+            <asp:ListItem Value="0">45 min</asp:ListItem>
+            <asp:ListItem Value="1" Selected="True">60-90 min</asp:ListItem>
+            <asp:ListItem Value="2">90+ min</asp:ListItem>
         </asp:RadioButtonList>
         <br />
         <br />
@@ -85,9 +85,9 @@
         <br />
         <h3>What Kind of split you would like?</h3>
         <asp:RadioButtonList ID="WorkoutKindRBL" runat="server" CssClass="radioButtonList ListItemCenterd" RepeatDirection="Horizontal">
-            <asp:ListItem Value="3" Selected="True">full body</asp:ListItem>
-            <asp:ListItem Value="2">ab</asp:ListItem>
-            <asp:ListItem Value="1">abc</asp:ListItem>
+            <asp:ListItem Value="0" Selected="True">full body</asp:ListItem>
+            <asp:ListItem Value="1">ab</asp:ListItem>
+            <asp:ListItem Value="2">abc</asp:ListItem>
         </asp:RadioButtonList>
         <br />
         <img src="https://img.icons8.com/android/24/000000/info.png" id="KindHelpImg" class="KindHelpImg" />

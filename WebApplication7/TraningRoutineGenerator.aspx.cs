@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SportsWebsiteV2;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -19,21 +20,28 @@ namespace WebApplication7
         {
             if (!IsPostBack)
             {
-                Session["connected"] = true;              
+                Session["connected"] = true;
             }
         }
+
         protected void CreateWotkout(object sender, EventArgs e)
         {
-         //   try
-         //   {
-                WotkoutCreater();
-        //    }
-       //     catch (Exception ex)
-       //     {
-        //        Response.Write("<script>alert('please try again')</script>");
-     //       }
+            int time = int.Parse(WorkoutsLengthRBL.SelectedValue),
+                kind = int.Parse(WorkoutKindRBL.SelectedValue);
+            ProgramMaker programMaker = new ProgramMaker(time, kind);
+            string program = programMaker.GetProgram();
+            LblTable.Text = program;
+            //   try
+            //   {
+            //WotkoutCreater();
+            //    }
+            //     catch (Exception ex)
+            //     {
+            //        Response.Write("<script>alert('please try again')</script>");
+            //       }
             Response.Write("<script>stopAnimation()</script>");
         }
+
         protected void PrintArray(string[] arr)
         {
             for (int i = 0; i < 5; i++)
@@ -118,33 +126,46 @@ namespace WebApplication7
         //-------------------------------------------------------------------NEW ALOGRITHM---------------------------------------------------------------------/
         private Dictionary<string, Dictionary<string, int>> muscleGroup_muscle_points = new Dictionary<string, Dictionary<string, int>>();//a dictionary containing muscle groups muscle inside that muscle group and number of points each muscle gets
 
-        protected void IntalizeMuscleDictionary(int generalPoints)//generalPoints is defined by like workout length and kind of workout
-        {
-            generalPoints *= 5;
+        private Dictionary<string, int> amountOfMuscleUsage = new Dictionary<string, int>();
+
+        protected void IntalizeMusclePointDictionary()
+        {//sets as 5 for each exc which is supposed to be worked
             string[] muscleGroupNames = new string[7] { "Chest", "Shoulder", "Tricep", "Abs", "Back", "Bicep", "Leg" };
-            string[] majorMuscles = new string[] { "Chest", "Back", "Leg" };//used to make bigger muscles more important
             foreach (string muscleGroupName in muscleGroupNames)
             {
                 List<string> muscles = GetMusclesGroupMuscles(muscleGroupName);
                 muscleGroup_muscle_points[muscleGroupName] = new Dictionary<string, int>();
                 foreach (string muscle in muscles)
                 {
-                    muscleGroup_muscle_points[muscleGroupName][muscle] = Array.IndexOf(majorMuscles, muscleGroupName) == -1 ? (generalPoints > 20 ? 20 : generalPoints) : generalPoints + 5;//bigger nuscles get 5 more points than smaller muscles
-                    if (WorkoutKindRBL.SelectedItem.Text == "abc" && muscleGroupName == "Leg")
-                    {
-                        muscleGroup_muscle_points[muscleGroupName][muscle] *= 2;
-                    }
+                    muscleGroup_muscle_points[muscleGroupName][muscle] = amountOfMuscleUsage[muscleGroupName] * 5;
                 }
             }
             muscleGroup_muscle_points["Leg"]["Leg Calves"] = 5;
         }
-        //[FileIOPermission(SecurityAction.PermitOnly, PathDiscovery = @"C:\Users\gilda\Desktop\Sports Website\User_Data")]
-        private void CreateProgramFile(string userID,string table)
-        { 
-            string fileName = userID + "'s_program.txt",
-                   path= @"C:\Users\gilda\Desktop\Sports Website\WebApplication7\User_Data\" + fileName;            
-             File.WriteAllText(path, table);
+
+        protected void IntalizeMuscleUsageDictionary()
+        {//selects the amount of exc each muscle should do
+            string[] muscleGroupNames = new string[] { "Chest", "Shoulder", "Tricep", "Abs", "Back", "Bicep", "Leg" };
+            string[] majorMuscleGroup = new string[] { "Chest", "Back", "Leg" };
+            int excAmount = int.Parse(WorkoutsLengthRBL.SelectedValue) + int.Parse(WorkoutKindRBL.SelectedValue);
+            foreach (string muscleGroupName in muscleGroupNames)
+            {
+                amountOfMuscleUsage[muscleGroupName] = excAmount;
+                if (Array.IndexOf(majorMuscleGroup, muscleGroupName) != -1)
+                {
+                    amountOfMuscleUsage[muscleGroupName] += 1;
+                }
+            }
         }
+
+        //[FileIOPermission(SecurityAction.PermitOnly, PathDiscovery = @"C:\Users\gilda\Desktop\Sports Website\User_Data")]
+        private void CreateProgramFile(string userID, string table)
+        {
+            string fileName = userID + "'s_program.txt",
+                   path = @"C:\Users\gilda\Desktop\Sports Website\WebApplication7\User_Data\" + fileName;
+            File.WriteAllText(path, table);
+        }
+
         protected List<string> GetMusclesGroupMuscles(string muscleGroup)
         {//puts individual muscle inside muscle groups
             string[] names = new string[20]{"Shoulder  front deltoid","Shoulder  rear deltoid","Shoulder lateral deltoid","Bicep short",
@@ -290,27 +311,6 @@ namespace WebApplication7
             return false;
         }
 
-        
-
-        private int GenerteExcNum(string muscleGroup)
-        {
-            string[] mainMuscleGruopNames = new string[] { "Chest", "Back", "Leg" },
-                secondaryMuscleGruopNames = new string[] { "Shoulder", "Tricep", "Abs", "Bicep" };
-            int workoutKind = int.Parse(WorkoutKindRBL.SelectedValue),
-                workoutLength = int.Parse(WorkoutsLengthRBL.SelectedValue),
-                numberOfExc = workoutLength / workoutKind;//the calculation is the workout kind which is 1-3 divided by how much time the workout is supposed to be
-            if (muscleGroup == "Leg" && workoutKind == 1)
-            {
-                workoutLength += 3;//change is made because plus 3 exc to the workout kind is pretty appropriate for leg day
-                return workoutLength > 6 ? 6 : workoutLength;
-            }
-            if (workoutLength == 5 && workoutKind == 1)
-            {
-                return Array.IndexOf(mainMuscleGruopNames, muscleGroup) != -1 ? 3 : 2;
-            }
-            return numberOfExc;
-        }
-
         protected void WotkoutCreater()
         {
             DateTime startTime = DateTime.Now,
@@ -320,11 +320,9 @@ namespace WebApplication7
             List<string> usedExc = new List<string>();
             string lowestMuscleUsed = "";
             int max = 1;
-            int numberOfExc = int.Parse(Math.Round(double.Parse(WorkoutsLengthRBL.SelectedValue) / double.Parse(WorkoutKindRBL.SelectedValue)).ToString());//the calculation is the workout kind which is 1-3 divided by how much time the workout is supposed to be
-            IntalizeMuscleDictionary(numberOfExc);
+            IntalizeMuscleUsageDictionary();
+            IntalizeMusclePointDictionary();//depended on the one above it
             string exc;
-            Debug.WriteLine("---------------------" + numberOfExc);
-            numberOfExc = numberOfExc > 5 ? 5 : numberOfExc;
             List<List<string>> excLists = new List<List<string>>();
 
             foreach (string muscleGroup in muscleGruopNames)
@@ -337,7 +335,7 @@ namespace WebApplication7
                 usedExc.Add(exc);
                 // for (; i < numberOfExc; i++)
                 //while (IsNotWorkingAll(muscleGroup, muscleGroup_muscle_points))
-                for (int i = 0; i < GenerteExcNum(muscleGroup); i++)
+                for (int i = 0; i < amountOfMuscleUsage[muscleGroup]; i++)
                 {
                     foreach (KeyValuePair<string, int> muscle in muscleGroup_muscle_points[muscleGroup])
                     {
@@ -394,7 +392,7 @@ namespace WebApplication7
                 repAndSetCount = new Dictionary<string, string>();
             GenerateRepsCountAndRest(repAndSetCount, restTime, excLists);
             Debug.WriteLine("here3");
-            string table= BuildTable(excLists, workoutKind, repAndSetCount, restTime);
+            string table = BuildTable(excLists, workoutKind, repAndSetCount, restTime);
             LblTable.Text = table;
             if ((bool)(Session["connected"]))
             {
@@ -554,7 +552,7 @@ namespace WebApplication7
                     // Debug.WriteLine("-------------------------------");
                     // Debug.WriteLine("A: "+ column.ToString());
                     //   Debug.WriteLine("B: " + FirstWord(column.ToString()));
-                     Debug.WriteLine(getMusclePoint);
+                    Debug.WriteLine(getMusclePoint);
                     int musclePoint = (int)sqlCommand.ExecuteScalar();
                     if (mathSymbol.Equals("-"))//gets each column muscle group because first word and then by column and either adds or subtracts
                     {

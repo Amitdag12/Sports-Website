@@ -8,34 +8,24 @@ PUSH </th>
 <th colspan = '2' class='headline'>Chest</th>
  </tr> 
    <tr>
+       <td><a href = ' https://www.youtube.com/results?search_query=Close-grip+benchpress' >Close-grip bench press</a></td>
+     <td>10 Reps for 3 Sets</td>
+     <td>2 - 3 min</td>
+ </tr>
+   <tr>
        <td><a href = ' https://www.youtube.com/results?search_query=
 Barbell+Bench+Press-MediumGrip' >
 Barbell Bench Press-Medium Grip</a></td>
-     <td>10 Reps for 3 Sets</td>
+     <td>8 Reps for 4 Sets</td>
      <td>2 - 3 min</td>
- </tr>
-   <tr>
-       <td><a href = ' https://www.youtube.com/results?search_query=Barbell+Incline+Bench+PressMedium-Grip' >Barbell Incline Bench Press Medium-Grip</a></td>
-     <td>10 Reps for 3 Sets</td>
-     <td>2 - 3 min</td>
- </tr>
-   <tr>
-       <td><a href = ' https://www.youtube.com/results?search_query=cable+chestfly' >cable chest fly</a></td>
-     <td>12 Reps for 4 Sets</td>
-     <td>1 - 2 min</td>
  </tr>
 <tr>
 <th colspan = '2' class='headline'>Shoulder</th>
  </tr> 
    <tr>
-       <td><a href = ' https://www.youtube.com/results?search_query=Militarypress' >Military press</a></td>
-     <td>8 Reps for 4 Sets</td>
+       <td><a href = ' https://www.youtube.com/results?search_query=Single-arm+kettlebellpush-press' >Single-arm kettlebell push-press</a></td>
+     <td>10 Reps for 4 Sets</td>
      <td>2 - 3 min</td>
- </tr>
-   <tr>
-       <td><a href = ' https://www.youtube.com/results?search_query=facepull' >face pull</a></td>
-     <td>14 Reps for 3 Sets</td>
-     <td>1 - 2 min</td>
  </tr>
 <tr>
 <th colspan = '2' class='headline'>Tricep</th>
@@ -57,30 +47,20 @@ PULL </th>
  </tr> 
    <tr>
        <td><a href = ' https://www.youtube.com/results?search_query=Landminetwist' >Landmine twist</a></td>
-     <td>10 Reps for 3 Sets</td>
+     <td>8 Reps for 4 Sets</td>
      <td>2 - 3 min</td>
- </tr>
-   <tr>
-       <td><a href = ' https://www.youtube.com/results?search_query=Russiantwist' >Russian twist</a></td>
-     <td>12 Reps for 3 Sets</td>
-     <td>1 - 2 min</td>
  </tr>
 <tr>
 <th colspan = '2' class='headline'>Back</th>
  </tr> 
    <tr>
-       <td><a href = ' https://www.youtube.com/results?search_query=Bent+Over+BarbellRow' >Bent Over Barbell Row</a></td>
-     <td>8 Reps for 3 Sets</td>
-     <td>2 - 3 min</td>
- </tr>
-   <tr>
        <td><a href = ' https://www.youtube.com/results?search_query=chinups*' >chin ups*</a></td>
-     <td>8 Reps for 4 Sets</td>
+     <td>10 Reps for 4 Sets</td>
      <td>2 - 3 min</td>
  </tr>
    <tr>
-       <td><a href = ' https://www.youtube.com/results?search_query=Pullups*' >Pullups*</a></td>
-     <td>8 Reps for 3 Sets</td>
+       <td><a href = ' https://www.youtube.com/results?search_query=Deadlifts' >Deadlifts</a></td>
+     <td>10 Reps for 3 Sets</td>
      <td>2 - 3 min</td>
  </tr>
 <tr>
@@ -88,18 +68,8 @@ PULL </th>
  </tr> 
    <tr>
        <td><a href = ' https://www.youtube.com/results?search_query=EZ-BarCurl' >EZ-Bar Curl</a></td>
-     <td>8 Reps for 3 Sets</td>
+     <td>10 Reps for 3 Sets</td>
      <td>2 - 3 min</td>
- </tr>
-   <tr>
-       <td><a href = ' https://www.youtube.com/results?search_query=HammerCurls' >Hammer Curls</a></td>
-     <td>12 Reps for 3 Sets</td>
-     <td>1 - 2 min</td>
- </tr>
-   <tr>
-       <td><a href = ' https://www.youtube.com/results?search_query=Incline+HammerCurls' >Incline Hammer Curls</a></td>
-     <td>12 Reps for 3 Sets</td>
-     <td>1 - 2 min</td>
  </tr>
 </table>
 <table  border='1' style='width: 40 %; height: 70 %; text - align:center; margin: auto'class='Centerd NiceBacground'>
@@ -112,28 +82,13 @@ LEGS </th>
 <th colspan = '2' class='headline'>Leg</th>
  </tr> 
    <tr>
-       <td><a href = ' https://www.youtube.com/results?search_query=Dumbbellsquat' >Dumbbell squat</a></td>
-     <td>8 Reps for 4 Sets</td>
-     <td>2 - 3 min</td>
- </tr>
-   <tr>
        <td><a href = ' https://www.youtube.com/results?search_query=Barbell+FullSquat' >Barbell Full Squat</a></td>
-     <td>8 Reps for 3 Sets</td>
+     <td>10 Reps for 3 Sets</td>
      <td>2 - 3 min</td>
  </tr>
    <tr>
-       <td><a href = ' https://www.youtube.com/results?search_query=Barbelllunge' >Barbell lunge</a></td>
-     <td>12 Reps for 4 Sets</td>
-     <td>1 - 2 min</td>
- </tr>
-   <tr>
-       <td><a href = ' https://www.youtube.com/results?search_query=Deadlifts' >Deadlifts</a></td>
-     <td>8 Reps for 3 Sets</td>
-     <td>2 - 3 min</td>
- </tr>
-   <tr>
-       <td><a href = ' https://www.youtube.com/results?search_query=LegPress' >Leg Press</a></td>
-     <td>12 Reps for 3 Sets</td>
+       <td><a href = ' https://www.youtube.com/results?search_query=calfraises' >calf raises</a></td>
+     <td>14 Reps for 3 Sets</td>
      <td>1 - 2 min</td>
  </tr>
 </table>

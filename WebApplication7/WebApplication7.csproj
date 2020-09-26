@@ -95,7 +95,6 @@
     <Content Include="Login.aspx" />
     <Content Include="Photos\Background.jpg" />
     <Content Include="Photos\brown-2-storey-house-under-blue-sky-1500459.jpg" />
-    <Content Include="Photos\man-carrying-barbel-791763.jpg" />
     <Content Include="Photos\person-lifting-black-and-gray-metal-barbell-1092877.jpg" />
     <Content Include="Photos\woman-doing-push-ups-2780762.jpg" />
     <Content Include="Register.aspx" />
@@ -152,6 +151,12 @@
     <Compile Include="Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
     </Compile>
+    <Compile Include="SportsWebsiteV2\HelpClasses\ExcGeneratorHelp\Exercise.cs" />
+    <Compile Include="SportsWebsiteV2\HelpClasses\ExcGeneratorHelp\ExerciseList.cs" />
+    <Compile Include="SportsWebsiteV2\HelpClasses\ExcGeneratorHelp\MicroMuscleGeter.cs" />
+    <Compile Include="SportsWebsiteV2\HelpClasses\ExcGeneratorHelp\MuscleExcNumGenerator.cs" />
+    <Compile Include="SportsWebsiteV2\HelpClasses\TableConstruction\TableConstractur.cs" />
+    <Compile Include="SportsWebsiteV2\ProgramMaker.cs" />
     <Compile Include="TraningRoutineGenerator.aspx.cs">
       <DependentUpon>TraningRoutineGenerator.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -163,6 +168,7 @@
   <ItemGroup>
     <Content Include="Excrcise.Master" />
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\SportsWebsiteV2 - Web Deploy.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
